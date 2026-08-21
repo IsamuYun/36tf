@@ -1,0 +1,281 @@
+========================================
+36 Tech 官网 · Ubuntu 24.04 VPS 部署步骤
+========================================
+
+架构：
+  Nginx  ──┬── 静态文件 dist/          （首页 / about / contact）
+           └── /api/*  反向代理 → 127.0.0.1:3001  （Express，AI 聊天 + 联系表单）
+
+  前端是 SPA，路由由浏览器接管，Nginx 必须做 index.html 回退，
+  否则直接访问 /about 会 404。
+
+  API 密钥只存在于 VPS 上的 .env，不进代码仓库、不进前端产物。
+
+
+----------------------------------------
+0. 前提
+----------------------------------------
+
+  · 一台 Ubuntu 24.04 VPS，有 sudo 权限
+  · 一个域名，A 记录已指向 VPS 的 IP
+  · 本地代码已推到 Git 仓库（.gitignore 已排除 .env 与 node_modules）
+
+  下文统一用这些占位，请替换成你的实际值：
+      域名        example.com
+      部署目录    /var/www/36tf
+      系统用户    deploy
+
+
+----------------------------------------
+1. 装基础环境
+----------------------------------------
+
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y nginx git curl ufw
+
+# Node.js 22 LTS（本项目用到 fetch 与 Web Streams，最低需要 Node 20）
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+node -v && npm -v          # 确认 v22.x
+
+# 防火墙
+sudo ufw allow OpenSSH
+sudo ufw allow 'Nginx Full'
+sudo ufw enable
+
+
+----------------------------------------
+2. 拉代码、装依赖、构建
+----------------------------------------
+
+sudo mkdir -p /var/www/36tf
+sudo chown -R $USER:$USER /var/www/36tf
+
+git clone <你的仓库地址> /var/www/36tf
+cd /var/www/36tf
+
+npm ci                     # 按 package-lock.json 精确安装
+npm run build              # 产出 dist/
+
+  说明：npm ci 比 npm install 更适合服务器，它严格按 lock 文件安装，
+  不会自作主张升级依赖。
+
+
+----------------------------------------
+3. 配置环境变量
+----------------------------------------
+
+cp .env.example .env
+nano .env
+
+填入：
+
+  # Qwen（AI 顾问 Eva）
+  QWEN_API_KEY=<你的密钥>
+  QWEN_BASE_URL=https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1
+  QWEN_MODEL=qwen3.8-max
+
+  # 联系表单发信（SMTP）
+  SMTP_HOST=<邮件服务商地址>
+  SMTP_PORT=587
+  SMTP_USER=<发信账号>
+  SMTP_PASS=<授权码，不是登录密码>
+  CONTACT_TO=yun@36tech.info
+  CONTACT_FROM=<发信地址，通常同 SMTP_USER>
+
+  # 生产环境收窄跨域来源
+  CORS_ORIGINS=https://example.com,https://www.example.com
+
+  # Express 监听端口，只对本机开放
+  PORT=3001
+
+收紧权限，避免同机其他用户读到密钥：
+
+chmod 600 .env
+
+先手动跑一次确认没问题：
+
+npm start
+  # 应打印模型名、端点、脱敏后的密钥
+  # 另开一个终端： curl http://127.0.0.1:3001/api/health
+  # 期望 chat.configured 与 contact.configured 都是 true
+  # 确认后 Ctrl+C 停掉
+
+
+----------------------------------------
+4. 用 systemd 常驻 Express
+----------------------------------------
+
+sudo nano /etc/systemd/system/36tf-api.service
+
+内容：
+
+  [Unit]
+  Description=36 Tech API (Express)
+  After=network.target
+
+  [Service]
+  Type=simple
+  User=deploy
+  WorkingDirectory=/var/www/36tf
+  ExecStart=/usr/bin/node server/index.js
+  Restart=always
+  RestartSec=5
+  Environment=NODE_ENV=production
+  StandardOutput=journal
+  StandardError=journal
+
+  [Install]
+  WantedBy=multi-user.target
+
+启用：
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now 36tf-api
+sudo systemctl status 36tf-api        # 确认 active (running)
+journalctl -u 36tf-api -f             # 实时看日志
+
+
+----------------------------------------
+5. 配置 Nginx
+----------------------------------------
+
+sudo nano /etc/nginx/sites-available/36tf
+
+内容：
+
+  server {
+      listen 80;
+      server_name example.com www.example.com;
+
+      root /var/www/36tf/dist;
+      index index.html;
+
+      # gzip
+      gzip on;
+      gzip_types text/css application/javascript application/json image/svg+xml;
+      gzip_min_length 1024;
+
+      # 带哈希的构建产物可以长期缓存
+      location /assets/ {
+          expires 1y;
+          add_header Cache-Control "public, immutable";
+      }
+
+      # API 反向代理
+      location /api/ {
+          proxy_pass http://127.0.0.1:3001;
+          proxy_http_version 1.1;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+
+          # ★ 关键：AI 聊天是 SSE 流式输出。
+          #   不关缓冲的话 Nginx 会把整段回复攒完再一次性吐出，
+          #   前端的逐字效果会变成「卡很久 → 突然全部出现」。
+          proxy_buffering off;
+          proxy_cache off;
+          proxy_read_timeout 300s;
+      }
+
+      # ★ SPA 回退：/about 与 /contact 由前端路由接管，
+      #   找不到文件时一律返回 index.html，否则直接访问会 404。
+      location / {
+          try_files $uri $uri/ /index.html;
+      }
+  }
+
+启用并重载：
+
+sudo ln -s /etc/nginx/sites-available/36tf /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t                          # 语法检查，必须 OK 才能重载
+sudo systemctl reload nginx
+
+此时用 http://example.com 应该能打开站点。
+
+
+----------------------------------------
+6. 配 HTTPS
+----------------------------------------
+
+sudo apt install -y certbot python3-certbot-nginx
+sudo certbot --nginx -d example.com -d www.example.com
+
+  certbot 会自动改写上面的 Nginx 配置，加上 443 与跳转。
+  证书自动续期已由系统定时任务处理，可以验证：
+
+sudo certbot renew --dry-run
+
+拿到证书后，回到 .env 确认 CORS_ORIGINS 用的是 https:// 开头的地址，
+改动后重启 API：
+
+sudo systemctl restart 36tf-api
+
+
+----------------------------------------
+7. 验收清单
+----------------------------------------
+
+  □ https://example.com          首页正常，Hero 轮播四句短语在动
+  □ https://example.com/about    直接回车访问不 404（验证 SPA 回退）
+  □ https://example.com/contact  海洋动画 Hero 正常，时间滑杆可拖
+  □ AI 顾问 Eva 能回话，且是逐字出现而不是一次性弹出
+       （若是一次性弹出 → Nginx 的 proxy_buffering off 没生效）
+  □ 联系表单提交后能收到邮件
+  □ 浏览器 DevTools 里搜 QWEN / SMTP，应该搜不到任何密钥
+  □ curl https://example.com/api/health 返回两个 configured: true
+
+
+----------------------------------------
+8. 后续更新代码
+----------------------------------------
+
+cd /var/www/36tf
+git pull
+npm ci
+npm run build
+sudo systemctl restart 36tf-api
+
+  只改了前端的话可以不重启 API，只需要 npm run build。
+  只改了 server/ 或 .env 的话不用重新 build，重启 API 即可。
+
+
+----------------------------------------
+9. 常见问题
+----------------------------------------
+
+访问 /about 返回 404
+  → Nginx 少了 try_files 回退，见第 5 步。
+
+AI 顾问回复不是逐字出现，而是等很久后一次性显示
+  → Nginx 缓冲了 SSE 流。确认 /api/ 块里有 proxy_buffering off。
+
+聊天接口返回 503，提示「尚未配置」
+  → .env 里 QWEN_* 三项没填全，或改完没重启 API。
+    journalctl -u 36tf-api 会打印缺哪个变量。
+
+联系表单返回 503
+  → SMTP_HOST / SMTP_USER / SMTP_PASS / CONTACT_TO 缺项。
+    此时页面会引导访客直接发邮件，不会静默失败。
+
+表单提交后没收到邮件但接口返回成功
+  → 检查是不是被蜜罐拦了（表单里有个隐藏的「公司」字段，
+    正常用户不会填；填了会被静默丢弃并在日志里打印「蜜罐命中」）。
+
+API 起不来
+  → journalctl -u 36tf-api -n 50 看报错。
+    最常见是 .env 路径不对（必须在 WorkingDirectory 下）
+    或 node 版本过低（需要 20+）。
+
+
+----------------------------------------
+10. 安全备忘
+----------------------------------------
+
+  · .env 权限 600，且已在 .gitignore 中排除，不要提交
+  · Express 只监听 127.0.0.1:3001，不要对公网暴露，全部流量走 Nginx
+  · 密钥泄露后立即到阿里云百炼控制台吊销并换新
+  · 定期 sudo apt update && sudo apt upgrade
+  · 建议关闭 SSH 密码登录，改用密钥

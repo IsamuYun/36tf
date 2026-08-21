@@ -1,0 +1,198 @@
+/* ============================================================
+   TIDES HERO —— 样式来自 docs/design/36-tech-info/src/page.css
+   两处按本项目情况调整：
+   1. 原样式用 width:100vw + margin-inline 破出居中容器实现通栏。
+      这里改为 width:100%，由页面直接全宽放置，避免 100vw 把滚动条宽度
+      也算进去而产生横向溢出。
+   2. 原字体 "DM Mono" 换成本项目已加载的 JetBrains Mono；
+      "Instrument Serif" 保留（Hero 的气质来源），已在 index.html 引入。
+   ============================================================ */
+
+.tides-hero {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: 480px;
+  overflow: hidden;
+  background: #06080f;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: default;
+}
+
+.tides-ocean {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.tides-ui {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(24px, 4vw, 48px) clamp(24px, 5vw, 72px) clamp(28px, 5vw, 56px);
+  color: #fff;
+}
+
+.tides-ui-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.tides-label {
+  font-size: 12px;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+}
+
+.tides-mood {
+  text-align: right;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
+}
+
+.tides-mood span {
+  display: block;
+}
+
+.tides-mood span:first-child {
+  font-size: 12px;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.tides-mood-time {
+  margin-top: 2px;
+  color: #fff;
+  font-family: 'Instrument Serif', serif;
+  font-size: 26px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tides-ui-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.tides-caption {
+  max-width: min(720px, calc(100% - 48px));
+  margin: 0;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: 'Instrument Serif', serif;
+  font-size: clamp(1.1rem, 3vw, 1.9rem);
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-align: center;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+  text-wrap: pretty;
+}
+
+.tides-caption em {
+  font-style: italic;
+}
+
+.tides-slider-wrap {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: min(440px, calc(100% - 48px));
+  padding: 12px 18px;
+  background: rgba(10, 16, 28, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+}
+
+.tides-slider-end {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  white-space: nowrap;
+}
+
+.tides-slider-wrap input[type='range'] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 1;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    #3a4a8a 0%,
+    #6fa8d4 25%,
+    #ffd27f 55%,
+    #ff7e54 78%,
+    #1a2244 100%
+  );
+  outline: none;
+  cursor: grab;
+}
+
+.tides-slider-wrap input[type='range']:active {
+  cursor: grabbing;
+}
+
+.tides-slider-wrap input[type='range']::-webkit-slider-thumb {
+  width: 18px;
+  height: 18px;
+  -webkit-appearance: none;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow:
+    0 2px 10px rgba(0, 0, 0, 0.35),
+    0 0 0 6px rgba(255, 255, 255, 0.12);
+  cursor: grab;
+}
+
+.tides-slider-wrap input[type='range']::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  cursor: grab;
+}
+
+@media (max-width: 640px) {
+  .tides-ui {
+    padding: 22px;
+  }
+
+  .tides-label {
+    max-width: 52vw;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    font-size: 10px;
+    line-height: 1.7;
+  }
+
+  .tides-mood span:first-child {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+  }
+
+  .tides-mood-time {
+    font-size: 24px;
+  }
+
+  .tides-slider-wrap {
+    gap: 12px;
+    padding-inline: 14px;
+  }
+}
