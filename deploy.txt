@@ -4,7 +4,7 @@
 
 架构：
   Nginx  ──┬── 静态文件 dist/          （首页 / about / contact）
-           └── /api/*  反向代理 → 127.0.0.1:3001  （Express，AI 聊天 + 联系表单）
+           └── /api/*  反向代理 → 127.0.0.1:3100  （Express，AI 聊天 + 联系表单）
 
   前端是 SPA，路由由浏览器接管，Nginx 必须做 index.html 回退，
   否则直接访问 /about 会 404。
@@ -87,7 +87,7 @@ nano .env
   CORS_ORIGINS=https://example.com,https://www.example.com
 
   # Express 监听端口，只对本机开放
-  PORT=3001
+  PORT=3100
 
 收紧权限，避免同机其他用户读到密钥：
 
@@ -97,7 +97,7 @@ chmod 600 .env
 
 npm start
   # 应打印模型名、端点、脱敏后的密钥
-  # 另开一个终端： curl http://127.0.0.1:3001/api/health
+  # 另开一个终端： curl http://127.0.0.1:3100/api/health
   # 期望 chat.configured 与 contact.configured 都是 true
   # 确认后 Ctrl+C 停掉
 
@@ -116,9 +116,9 @@ sudo nano /etc/systemd/system/36tf-api.service
 
   [Service]
   Type=simple
-  User=deploy
+  User=ubuntu
   WorkingDirectory=/var/www/36tf
-  ExecStart=/usr/bin/node server/index.js
+  ExecStart=/home/ubuntu/.nvm/versions/node/v24.15.0/bin/node server/index.js
   Restart=always
   RestartSec=5
   Environment=NODE_ENV=production
@@ -164,7 +164,7 @@ sudo nano /etc/nginx/sites-available/36tf
 
       # API 反向代理
       location /api/ {
-          proxy_pass http://127.0.0.1:3001;
+          proxy_pass http://127.0.0.1:3100;
           proxy_http_version 1.1;
           proxy_set_header Host $host;
           proxy_set_header X-Real-IP $remote_addr;
@@ -275,7 +275,7 @@ API 起不来
 ----------------------------------------
 
   · .env 权限 600，且已在 .gitignore 中排除，不要提交
-  · Express 只监听 127.0.0.1:3001，不要对公网暴露，全部流量走 Nginx
+  · Express 只监听 127.0.0.1:3100，不要对公网暴露，全部流量走 Nginx
   · 密钥泄露后立即到阿里云百炼控制台吊销并换新
   · 定期 sudo apt update && sudo apt upgrade
   · 建议关闭 SSH 密码登录，改用密钥

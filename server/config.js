@@ -7,9 +7,9 @@ import 'dotenv/config'
 const required = ['QWEN_API_KEY', 'QWEN_BASE_URL', 'QWEN_MODEL']
 
 export const config = {
-  port: Number(process.env.PORT) || 3001,
+  port: Number(process.env.PORT) || 3100,
   // 默认只绑本机回环：生产环境所有流量走 Nginx 反代，
-  // 绑 0.0.0.0 会让 3001 直接暴露到公网、绕过反代与 HTTPS。
+  // 绑 0.0.0.0 会让该端口直接暴露到公网、绕过反代与 HTTPS。
   host: process.env.HOST || '127.0.0.1',
   // 允许跨源的前端地址。生产环境请收窄到实际域名。
   corsOrigins: (process.env.CORS_ORIGINS || 'http://localhost:5188,http://localhost:5173')
