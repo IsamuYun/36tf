@@ -1,49 +1,151 @@
-import { Reveal, SectionHead, Placeholder } from './ui.jsx'
+import { Reveal, SectionHead } from './ui.jsx'
 import Band from './Band.jsx'
+import CaseCard from './CaseCard.jsx'
 
-/**
- * 首页 S8 · 案例
- * 文案总纲：没有真实案例前本模块不上线，严禁虚构客户与数字。
- * 原型保留版位，卡片结构 = 行业标签 + 一句话问题 + 一句话做法 + 一个可验证结果。
- */
+import hikMain from '../assets/works/hikvision/works-hikvision-main.jpg'
+import hikLogo from '../assets/works/hikvision/hikvision-logo.jpg'
+import migrationLogo from '../assets/works/hikvision/migration-logo.avif'
+import planLogo from '../assets/works/hikvision/plan-logo.png'
+import securityLogo from '../assets/works/hikvision/security-logo.jpg'
+
+import cesascMain from '../assets/works/cesasc/works-cesasc-main.jpg'
+import cesascLogo from '../assets/works/cesasc/cesasc-logo.png'
+import j2019 from '../assets/works/cesasc/2019-journal.jpg'
+import j2021 from '../assets/works/cesasc/2021-journal.png'
+import j2026 from '../assets/works/cesasc/2026-journal.png'
+
+/* 渐变一律「底深顶浅」，配合自下而上的揭开方向 */
+const ICE_BLUE = 'linear-gradient(0deg, #A9D3F4 0%, #C2E0F8 32%, #DCEDFC 66%, #F2F9FF 100%)'
+const EMERALD = 'linear-gradient(0deg, #7FCFB4 0%, #A5DFC8 32%, #CFEEE0 66%, #F0FAF5 100%)'
+
+const CASES = [
+  {
+    title: 'Hikvision Migration',
+    subtitle: '10,000 Pages, Zero Traffic Loss',
+    tags: ['Drupal 7 → AEM', 'Platform Migration', 'Zero Traffics Loss'],
+    mainShot: hikMain,
+    gradient: ICE_BLUE,
+    icons: [
+      {
+        src: hikLogo,
+        alt: 'Hikvision',
+        pos: 'left-[1%] top-[44%]',
+        width: 'w-[86px] md:w-24', // 原始 96×54
+        flyX: '-58px',
+        flyY: '-14px',
+        rotFrom: '-52deg',
+        rotTo: '-23deg',
+        delay: 0,
+      },
+      {
+        src: migrationLogo,
+        alt: '平台迁移',
+        pos: 'right-[1%] top-[40%]',
+        width: 'w-[68px] md:w-20', // 原始 512×512
+        flyX: '58px',
+        flyY: '-16px',
+        rotFrom: '46deg',
+        rotTo: '18deg',
+        delay: 70,
+      },
+      {
+        src: planLogo,
+        alt: '迁移方案',
+        pos: 'bottom-[8%] left-[6%]',
+        width: 'w-[60px] md:w-[72px]', // 原始 80×80
+        flyX: '-50px',
+        flyY: '30px',
+        rotFrom: '50deg',
+        rotTo: '23deg',
+        delay: 140,
+        hideOnSm: true,
+      },
+      {
+        src: securityLogo,
+        alt: '权重与安全',
+        pos: 'bottom-[10%] right-[6%]',
+        width: 'w-[132px] md:w-[180px]', // 原始 240×160，等比缩到 180×120
+        flyX: '50px',
+        flyY: '28px',
+        rotFrom: '-56deg',
+        rotTo: '-27deg',
+        delay: 210,
+        hideOnSm: true,
+      },
+    ],
+  },
+  {
+    title: 'CESASC.org Upgrade',
+    subtitle: 'Drupal 7 EOL → Drupal 11 Modernization',
+    tags: ['Drupal 7 → Drupal 11', 'Drupal Upgrade', 'UI/UX Design'],
+    mainShot: cesascMain,
+    gradient: EMERALD,
+    icons: [
+      {
+        src: cesascLogo,
+        alt: 'CESASC',
+        pos: 'left-[2%] top-[42%]',
+        width: 'w-[72px] md:w-[88px]', // 原始 128×128
+        flyX: '-58px',
+        flyY: '-14px',
+        rotFrom: '-50deg',
+        rotTo: '-21deg',
+        delay: 0,
+      },
+      {
+        src: j2019,
+        alt: '2019 年刊',
+        pos: 'bottom-[12%] left-[7%]',
+        width: 'w-[58px] md:w-[70px]', // 竖版 96×124
+        flyX: '-50px',
+        flyY: '30px',
+        rotFrom: '48deg',
+        rotTo: '19deg',
+        delay: 90,
+        hideOnSm: true,
+      },
+      {
+        src: j2021,
+        alt: '2021 年刊',
+        pos: 'right-[2%] top-[36%]',
+        width: 'w-[58px] md:w-[70px]', // 竖版 96×126
+        flyX: '58px',
+        flyY: '-18px',
+        rotFrom: '44deg',
+        rotTo: '16deg',
+        delay: 170,
+      },
+      {
+        src: j2026,
+        alt: '2026 年刊',
+        pos: 'bottom-[9%] right-[6%]',
+        width: 'w-[66px] md:w-[82px]', // 竖版 96×124，最新一期略大
+        flyX: '50px',
+        flyY: '28px',
+        rotFrom: '-54deg',
+        rotTo: '-24deg',
+        delay: 250,
+        hideOnSm: true,
+      },
+    ],
+  },
+]
+
 export default function Cases() {
   return (
     <Band tone="white">
       <div>
         <Reveal>
-          <SectionHead num="06" title="做过的事" zh="真实案例填充后上线；在此之前本模块不对外展示。" />
+          <SectionHead num="06" title="做过的事" zh="两个刚交付完的项目。" />
         </Reveal>
 
-        <div className="grid gap-5 md:grid-cols-3">
-          {[1, 2, 3].map((n, i) => (
-            <Reveal key={n} delay={i * 80}>
-              <article className="flex h-full flex-col rounded-3xl border border-dashed border-ink/15 bg-cloud p-7">
-                <span className="font-mono text-[10px] tracking-[0.16em] text-amber uppercase">
-                  待填 · 案例 {n}
-                </span>
-
-                <Placeholder label="16:9 image" ratio="16/9" className="mt-5 w-full" />
-
-                <div className="mt-6 space-y-3">
-                  <Placeholder label="行业 / 市场" className="h-7 w-2/3" />
-                  <Placeholder label="一句话问题" className="h-7 w-full" />
-                  <Placeholder label="一句话做法" className="h-7 w-5/6" />
-                </div>
-
-                <div className="mt-6 border-t border-ink/10 pt-5">
-                  <Placeholder label="可核查的结果数字" className="h-12 w-full" />
-                </div>
-              </article>
+        <div className="space-y-6">
+          {CASES.map((c, i) => (
+            <Reveal key={c.title} delay={i * 90}>
+              <CaseCard data={c} />
             </Reveal>
           ))}
         </div>
-
-        <Reveal delay={140}>
-          <p className="mx-auto mt-10 max-w-[560px] text-center text-[13.5px] leading-relaxed text-ink/45">
-            客户不便具名时可匿名化处理（如「一家做户外装备的品牌，主攻北美市场」），
-            前提是内容真实。出海客户会核实。
-          </p>
-        </Reveal>
       </div>
     </Band>
   )

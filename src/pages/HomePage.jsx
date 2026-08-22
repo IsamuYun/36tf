@@ -22,7 +22,7 @@ export default function HomePage({ tweaks }) {
       <Paths />
       <WhyUs />
       <Process />
-      {!tweaks.hidePending && <Cases />}
+      <Cases />
       <Faq />
       <CtaForm />
     </>

@@ -131,6 +131,99 @@
   }
 }
 
+/* ------------------------------------------------------------------
+   案例卡悬停动效。图标的倾角思路参考 xiaoyanghu.com 首页
+   Featured Projects——每个图标有自己的静止倾角，动画只是从夸张角度
+   过渡到该倾角；这里改为由 hover 驱动，而非滚动入场。
+------------------------------------------------------------------ */
+/* 图标：静止时完全不显示。鼠标进入才从 --fly 偏移处飞到静止倾角，
+   离开时原路退回并消失。每个图标自带 transition-delay，形成先后次序。 */
+.case-icon {
+  opacity: 0;
+  transform: translate(var(--fly-x), var(--fly-y)) rotate(var(--rot-from)) scale(0.8);
+  transition:
+    opacity 0.45s var(--ease-brand),
+    transform 0.6s var(--ease-brand);
+}
+.case-card:hover .case-icon {
+  opacity: 1;
+  transform: translate(0, 0) rotate(var(--rot-to)) scale(1);
+}
+
+/* 主图：由后往前推。静止时缩到 0.94 像退在后面，悬停时上浮 40px 并放大到 1.06，
+   配合阴影加深，读作朝观者推进。
+   transform-origin 取 center top：放大时顶边不动，主图顶部内容始终原位不被推出视野。
+   容器不做 overflow 裁切（见组件），放大后的整幅不会被左右切掉；
+   底部由卡片自身的 overflow-hidden 收口，不会露出空隙。 */
+.case-shot {
+  transition:
+    transform 0.6s var(--ease-brand),
+    filter 0.6s var(--ease-brand);
+  transform-origin: center top;
+  transform: scale(0.94);
+  filter: drop-shadow(0 10px 20px rgba(13, 27, 46, 0.18));
+}
+.case-card:hover .case-shot {
+  transform: translateY(-40px) scale(1.06);
+  filter: drop-shadow(0 34px 54px rgba(13, 27, 46, 0.34));
+}
+
+/* 文案整体上移，给主图的上浮让出空间 */
+.case-copy {
+  transition: transform 0.6s var(--ease-brand);
+}
+.case-card:hover .case-copy {
+  transform: translateY(-20px);
+}
+
+/* 冰蓝渐变层：自下而上揭开。
+   用 clip-path 而非 scaleY —— scaleY 会把渐变本身拉伸变形，
+   clip-path 只是移动裁切边界，渐变始终保持原比例。 */
+.case-bg {
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 0.6s var(--ease-brand);
+}
+.case-card:hover .case-bg {
+  clip-path: inset(0 0 0 0);
+}
+
+.case-card {
+  transition:
+    box-shadow 0.5s var(--ease-brand),
+    transform 0.5s var(--ease-brand);
+}
+.case-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 40px 80px -40px rgba(13, 27, 46, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-icon,
+  .case-shot,
+  .case-copy,
+  .case-bg,
+  .case-card {
+    transition: none;
+  }
+  /* 关掉动效时渐变常显，否则卡片永远是白底 */
+  .case-bg {
+    clip-path: none;
+  }
+  /* 关掉动效时图标直接常显在静止位置，否则永远看不到 */
+  .case-icon {
+    opacity: 1;
+    transform: rotate(var(--rot-to));
+  }
+  .case-card:hover,
+  .case-card:hover .case-shot,
+  .case-card:hover .case-copy {
+    transform: none;
+  }
+  .case-card:hover .case-icon {
+    transform: rotate(var(--rot-to));
+  }
+}
+
 /* 入场动画：尊重系统的减少动效偏好 */
 @media (prefers-reduced-motion: no-preference) {
   .reveal {

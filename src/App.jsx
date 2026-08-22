@@ -39,7 +39,6 @@ export default function App() {
   const [tweaks, setTweaks] = useState({
     hero: 'main',
     rings: true,
-    hidePending: false,
   })
 
   return (

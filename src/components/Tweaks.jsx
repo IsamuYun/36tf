@@ -3,7 +3,6 @@ import { HERO_VARIANTS } from '../content.js'
 
 /**
  * 设计参数面板。收起时完全隐藏，演示时页面看起来就是成品。
- * 「隐藏待填模块」可一键预览删掉占位模块后的真实上线形态。
  */
 export default function Tweaks({ state, setState }) {
   const [open, setOpen] = useState(false)
@@ -110,12 +109,6 @@ export default function Tweaks({ state, setState }) {
             onClick={() => setState((s) => ({ ...s, rings: !s.rings }))}
           >
             圆环母题
-          </Toggle>
-          <Toggle
-            on={state.hidePending}
-            onClick={() => setState((s) => ({ ...s, hidePending: !s.hidePending }))}
-          >
-            隐藏待填模块
           </Toggle>
         </div>
       </Row>
