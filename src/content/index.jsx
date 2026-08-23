@@ -13,8 +13,8 @@ import en from './en.js'
  */
 const LOCALES = { cn, en }
 
-/** 语言 → URL 前缀。中文是默认语言，占根路径。 */
-export const PREFIX = { cn: '', en: '/en' }
+/** 语言 → URL 前缀。英文是默认语言，占根路径。 */
+export const PREFIX = { cn: '/cn', en: '' }
 
 const ContentContext = createContext(cn)
 
@@ -33,7 +33,7 @@ export function useLocale() {
 }
 
 /**
- * 给站内路径加上当前语言前缀：'/about' → '/en/about'（英文）或 '/about'（中文）。
+ * 给站内路径加上当前语言前缀：'/about' → '/cn/about'（中文）或 '/about'（英文）。
  * 纯 hash（'#services'）原样返回——它指向当前页内的锚点，不该被加前缀。
  */
 export function useHref() {
@@ -41,6 +41,8 @@ export function useHref() {
   const prefix = PREFIX[locale] ?? ''
   return (path = '/') => {
     if (path.startsWith('#')) return path
-    return `${prefix}${path}` || '/'
+    // 单独处理 '/'：直接拼会得到 '/cn/'，多出一个和 '/cn' 等价的地址
+    const href = path === '/' ? prefix : `${prefix}${path}`
+    return href || '/'
   }
 }

@@ -422,7 +422,7 @@ export const UI = {
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     // Points at the other language's home page; each file writes its own.
-    lang: { label: '中文', href: '/', aria: '切换到中文' },
+    lang: { label: '中文', href: '/cn', aria: '切换到中文' },
   },
 
   hero: {

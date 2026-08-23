@@ -415,7 +415,7 @@ export const UI = {
     openMenu: '打开菜单',
     closeMenu: '关闭菜单',
     // 指向另一种语言的首页；两个文件各写各的，不做自动推导
-    lang: { label: 'EN', href: '/en', aria: 'Switch to English' },
+    lang: { label: 'EN', href: '/', aria: 'Switch to English' },
   },
 
   hero: {

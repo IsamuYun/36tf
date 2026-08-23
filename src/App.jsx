@@ -94,14 +94,15 @@ export default function App() {
       <ScrollToTop />
       <Routes>
         <Route
-          path="/en/*"
+          path="/cn/*"
+          element={<Site locale="cn" home={HomePage} tweaks={tweaks} setTweaks={setTweaks} />}
+        />
+        {/* 兜底的 /* 必须留在最后：英文是默认语言，占根路径 */}
+        <Route
+          path="/*"
           element={
             <Site locale="en" home={HomePageEn} tweaks={tweaks} setTweaks={setTweaks} />
           }
-        />
-        <Route
-          path="/*"
-          element={<Site locale="cn" home={HomePage} tweaks={tweaks} setTweaks={setTweaks} />}
         />
       </Routes>
     </BrowserRouter>
