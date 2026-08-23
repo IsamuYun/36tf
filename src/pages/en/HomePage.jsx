@@ -1,5 +1,6 @@
 import HeroShowcase from '../../components/HeroShowcase.jsx'
 import TrustBar from '../../components/TrustBar.jsx'
+import WorkInBar from '../../components/WorkInBar.jsx'
 import ChatConsult from '../../components/ChatConsult.jsx'
 import Pains from '../../components/Pains.jsx'
 import Services from '../../components/Services.jsx'
@@ -22,9 +23,12 @@ export default function HomePage() {
   return (
     <>
       <HeroShowcase />
-      <TrustBar />
-      <ChatConsult />
+      <WorkInBar />
       <Pains />
+      <TrustBar />
+      
+      <ChatConsult />
+      
       <Services />
       <Paths />
       <WhyUs />

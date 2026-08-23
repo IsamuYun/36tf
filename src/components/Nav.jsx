@@ -44,11 +44,11 @@ export default function Nav() {
           <img
             src="/36-tech-logo.png"
             alt=""
-            width="34"
-            height="34"
-            className="h-[34px] w-[34px] object-contain"
+            width="48"
+            height="48"
+            className="h-[48px] w-[48px] object-contain"
           />
-          <span className="font-display text-[17px] font-bold tracking-tight text-ink">
+          <span className="font-display text-[20px] font-bold tracking-tight text-ink">
             {BRAND}
           </span>
         </Link>

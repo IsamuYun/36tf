@@ -10,8 +10,10 @@
 export default function CaseCard({ data }) {
   const { title, subtitle, tags, mainShot, gradient, icons } = data
 
+  /* 卡片带 1px 直角边框。渐变层用 inset-0 贴的是 padding box（边框以内），
+     所以悬停揭开渐变时边框不会被盖掉。 */
   return (
-    <article className="case-card relative mx-auto h-[400px] w-full max-w-[960px] overflow-hidden bg-white">
+    <article className="case-card relative mx-auto h-[400px] w-full max-w-[960px] overflow-hidden border border-ink/12 bg-white">
       {/* 渐变层：静止时被 clip-path 完全裁掉，悬停时自下而上揭开 */}
       <div className="case-bg absolute inset-0" style={{ background: gradient }} />
 

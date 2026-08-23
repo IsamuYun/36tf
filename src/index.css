@@ -41,7 +41,7 @@
 @layer components {
   /* 全站栅格容器 */
   .wrap {
-    @apply mx-auto w-full max-w-[1266px] px-6 md:px-10;
+    @apply mx-auto w-full max-w-[1200px] px-6 md:px-10;
   }
 
   /* 品牌板 01 号母题：圆环。conic 渐变 + radial 遮罩挖空中心，

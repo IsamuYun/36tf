@@ -20,19 +20,66 @@ import heroPoster1 from '../assets/hero/hero-01.jpg'
 import heroPoster2 from '../assets/hero/hero-02.jpg'
 import heroPoster3 from '../assets/hero/hero-03.jpg'
 import heroPoster4 from '../assets/hero/hero-04.jpg'
+import shopifyLogo from '../assets/work-in/shopify-logo.png'
+import wooCommerceLogo from '../assets/work-in/woo-commerce-logo.png'
+import drupalLogo from '../assets/work-in/drupal-logo.png'
+import awsLogo from '../assets/work-in/aws-logo.png'
+import openaiLogo from '../assets/work-in/openai-logo.png'
+import aemLogo from '../assets/work-in/aem-logo.png'
 import rednoteCode from '../assets/contact/rednote-code.jpg'
 import wechatCode from '../assets/contact/wechat-code.jpg'
 
 export const BRAND = '36 Tech'
 
+/* url / blurb feed the panel TrustBar opens when a brand is clicked.
+   An empty url greys out the "Visit site" button rather than rendering a dead link.
+   【TBD: …】 placeholders must be replaced before launch. */
 export const CLIENTS = [
-  { name: 'JW Fireproof Tech', logo: jwFabric },
-  { name: 'Raiden Antiques', logo: raidenAntiques },
-  { name: 'CESASC', logo: cesascLogo },
-  { name: 'Seren Inn', logo: seren },
-  { name: 'Box of Fun', logo: boxOfFun },
-  { name: 'Sindy Fish', logo: sindyFish },
-  { name: 'Yunlei Studio', logo: chest },
+  { 
+    name: 'JW Fire Block', 
+    logo: jwFabric, 
+    url: 'https://jm.36techfreedom.com', 
+    blurb: '【TBD: one-line summary】' 
+  },
+  { 
+    name: 'Raiden Antiques', 
+    logo: raidenAntiques, 
+    url: 'https://lei.36tech.info', 
+    blurb: '【TBD: one-line summary】' 
+  },
+  {
+    name: 'CESASC',
+    logo: cesascLogo,
+    url: 'https://cesasc.org',
+    blurb: '【TBD: one-line summary】',
+  },
+  { 
+    name: 'Seren Inn', 
+    logo: seren, 
+    url: 'https://isamuyun.github.io/seren-site/', 
+    blurb: '【TBD: one-line summary】' },
+  { 
+    name: 'Box of Fun', 
+    logo: boxOfFun, 
+    url: 'https://www.newbeelink.com/', 
+    blurb: 'Box of Fun is a packaging supplier for the US market. Their Shopify store sells custom boxes, bags and labels to small businesses. The site was built from scratch with a custom theme and a full set of product options.'
+  },
+  { 
+    name: 'Sindy Fish', 
+    logo: sindyFish, 
+    url: 'https://sindyfish.cloud', 
+    blurb: 'Mental health counseling practice in the CN. The site is a brochure with a booking form' 
+  },
+]
+
+/* WorkInBar 的技术栈图标。顺序即展示顺序，名称是品牌名，两种语言相同。 */
+export const WORK_IN = [
+  { name: 'Shopify', logo: shopifyLogo },
+  { name: 'WooCommerce', logo: wooCommerceLogo },
+  { name: 'Drupal', logo: drupalLogo },
+  { name: 'AWS', logo: awsLogo },
+  { name: 'OpenAI', logo: openaiLogo },
+  { name: 'AEM', logo: aemLogo },
 ]
 
 // The four capability domains — the site's information architecture.
@@ -79,23 +126,23 @@ export const HERO_POSTERS = [
 export const PAINS = [
   {
     n: '01',
-    title: 'The site drags',
-    body: 'Five or six seconds to first paint. Overseas shoppers leave before a product loads. The theme has been hacked apart, so every platform update breaks something.',
+    title: 'The developer disappeared.',
+    body: 'No documentation, no handoff, and the one person who understood the build stopped answering. You’re afraid to touch anything.',
   },
   {
     n: '02',
-    title: 'Afraid to migrate',
-    body: 'The old platform keeps getting in the way. But SEO equity, order history and downtime risk make it easier to keep putting it off.',
+    title: 'The migration quote scared you off.',
+    body: 'Someone told you a replatform means losing your rankings and starting over. That’s usually a sign they don’t know how to do it, not a law of nature.',
   },
   {
     n: '03',
-    title: 'Nobody finds you',
-    body: 'Organic rankings will not move, so every visit is bought. Meanwhile buyers ask AI directly, and your brand is not in the answer.',
+    title: 'Your agency owns everything.',
+    body: 'The hosting, the domain, the repository, the analytics — all in their accounts. Leaving means starting from scratch, and they know it.',
   },
   {
     n: '04',
-    title: 'The numbers disagree',
-    body: 'GA4, the ad platform and the store backend report three different figures. Budget gets allocated on instinct.',
+    title: 'Nobody is responsible for it.',
+    body: 'Not neglected on purpose. There’s just no one whose job it is to notice when a plugin breaks, a certificate expires, or orders quietly stop coming through.',
   },
 ]
 
@@ -396,10 +443,10 @@ export const UI = {
   /* 英文首页专用的 Hero：左文右图，与中文版的深色 Hero 是两套设计。
      dwellMs 为每张海报的停留时长。 */
   heroShowcase: {
-    eyebrow: 'Site engineering for brands going global',
-    title: ['Every technical piece', 'of your overseas site.'],
-    lead: 'E-commerce builds, platform migration, AI support, SEO and analytics — handled by one team with one person accountable for the outcome.',
-    cta: 'Get a free site audit',
+    eyebrow: 'BUILD | FIX | MIGRATE',
+    title: ['I take over websites', 'other people left behind'],
+    lead: 'Shopify, WordPress, Drupal. Migrations, cleanups, and the half-finished work your last developer walked away from. 20+ years of software development, one person accountable, written scope before anything gets touched.',
+    cta: 'Get a Free Audit',
     posterHint: 'Recent work',
     dwellMs: 8000,
     /* title 里放一个字符串数组就会变成逐字翻起的轮播，例如
@@ -409,7 +456,17 @@ export const UI = {
     // 半角句点右侧没有多余留白，不需要负边距
     tightPeriod: false,
   },
-  trust: { before: 'Trusted by', after: 'brands selling abroad' },
+  trust: {
+    before: 'Trusted by',
+    after: 'brands',
+    // The panel that opens on click
+    toggle: (name) => `See site details for ${name}`,
+    visit: 'Visit site',
+    noUrl: '【TBD: URL】',
+    close: 'Close',
+  },
+
+  workIn: { title: 'The stack we work in' },
 
   chat: {
     title: 'Ask the advisor first',
@@ -437,10 +494,10 @@ export const UI = {
 
   pains: {
     num: '01',
-    title: 'Any of this sound familiar?',
-    sub: 'The four site problems we see most often.',
-    closingLead: 'These are not separate problems. They usually share one root cause: ',
-    closingStrong: 'the site was never treated as a long-term asset.',
+    title: 'Sound familiar?',
+    // 这一节的四张卡自己就说清楚了，不再加副标题
+    closingLead: 'These are the same problem: ',
+    closingStrong: 'the site was treated as a project, not as an asset.',
   },
 
   services: {
@@ -575,6 +632,7 @@ export default {
   UI,
   BRAND,
   CLIENTS,
+  WORK_IN,
   DOMAINS,
   HERO_VARIANTS,
   HERO_POSTERS,

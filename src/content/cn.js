@@ -15,20 +15,69 @@ import heroPoster1 from '../assets/hero/hero-01.jpg'
 import heroPoster2 from '../assets/hero/hero-02.jpg'
 import heroPoster3 from '../assets/hero/hero-03.jpg'
 import heroPoster4 from '../assets/hero/hero-04.jpg'
+import shopifyLogo from '../assets/work-in/shopify-logo.png'
+import wooCommerceLogo from '../assets/work-in/woo-commerce-logo.png'
+import drupalLogo from '../assets/work-in/drupal-logo.png'
+import awsLogo from '../assets/work-in/aws-logo.png'
+import openaiLogo from '../assets/work-in/openai-logo.png'
+import aemLogo from '../assets/work-in/aem-logo.png'
 import rednoteCode from '../assets/contact/rednote-code.jpg'
 import wechatCode from '../assets/contact/wechat-code.jpg'
 
 export const BRAND = '36 Tech'
 
-// 已服务的出海品牌。顺序即展示顺序。
+/* 已服务的出海品牌。顺序即展示顺序。
+   url / blurb 供 TrustBar 点开后的详情面板使用：
+   url 留空时详情里的「访问网站」按钮会置灰，不会渲染成坏链接。
+   【待填：xxx】为占位符，上线前必须替换，清单见 00-文案总纲.txt */
 export const CLIENTS = [
-  { name: 'JW 防火科技', logo: jwFabric },
-  { name: '雷记古物', logo: raidenAntiques },
-  { name: '南加州科工会', logo: cesasc },
-  { name: '宁境客栈', logo: seren },
-  { name: '乐盒包装物', logo: boxOfFun },
-  { name: '云端之燏', logo: sindyFish },
-  { name: '云雷斋', logo: chest },
+  {
+    name: 'JW 防火科技',
+    logo: jwFabric,
+    url: 'https://jm.36techfreedom.com',
+    blurb: 'JW 防火材料的 WooCommerce 站。',
+  },
+  {
+    name: '雷记古物',
+    logo: raidenAntiques,
+    url: 'https://lei.36tech.info',
+    blurb: '雷记古物的 Shopify 古玩店。',
+  },
+  {
+    name: '南加州科工会',
+    logo: cesasc,
+    url: 'https://cesasc.org',
+    blurb: '【待填：一句话简介】',
+  },
+  {
+    name: '宁境客栈',
+    logo: seren,
+    url: 'https://isamuyun.github.io/seren-site/',
+    blurb: '【待填：一句话简介】',
+  },
+  {
+    name: '乐盒包装物',
+    logo: boxOfFun,
+    url: 'https://www.newbeelink.com/',
+    blurb:
+      '乐盒包装物是面向美国市场的包装供应商。他们的 Shopify 店铺向小商家出售定制纸盒、包装袋与标签。站点从零搭建，主题定制，商品选项做全。',
+  },
+  {
+    name: '云端之燏',
+    logo: sindyFish,
+    url: 'https://sindyfish.cloud',
+    blurb: '国内的心理咨询工作室。站点是一份带预约表单的介绍页。',
+  },
+]
+
+/* WorkInBar 的技术栈图标。顺序即展示顺序，名称是品牌名，两种语言相同。 */
+export const WORK_IN = [
+  { name: 'Shopify', logo: shopifyLogo },
+  { name: 'WooCommerce', logo: wooCommerceLogo },
+  { name: 'Drupal', logo: drupalLogo },
+  { name: 'AWS', logo: awsLogo },
+  { name: 'OpenAI', logo: openaiLogo },
+  { name: 'AEM', logo: aemLogo },
 ]
 
 // 四个能力域 —— 全站信息架构的骨架，Hero 主标题与服务分组共用同一套表述
@@ -77,23 +126,23 @@ export const HERO_POSTERS = [
 export const PAINS = [
   {
     n: '01',
-    title: '站点跑不动',
-    body: '首屏加载五六秒，海外用户还没看到商品就关掉了。主题被改得面目全非，平台一升级就出问题。',
+    title: '当初做站的人不见了。',
+    body: '没有文档，没有交接，唯一搞得懂这套东西的人不再回消息。现在你哪儿都不敢动。',
   },
   {
     n: '02',
-    title: '想迁移不敢迁',
-    body: '旧平台限制越来越多，但一想到 SEO 权重、历史订单、迁移期间的停摆风险，就一直拖着。',
+    title: '一份迁移报价把你劝退了。',
+    body: '有人告诉你换平台就等于丢掉排名、一切从头再来。这通常说明对方不会做，而不是这件事本来就该如此。',
   },
   {
     n: '03',
-    title: '搜不到你',
-    body: 'Google 自然排名上不去，全靠广告买流量。而客户现在直接问 AI，你的品牌不在答案里。',
+    title: '东西全在服务商手里。',
+    body: '主机、域名、代码仓库、统计后台——全挂在他们的账号下。想换人就等于从零开始，他们也清楚这一点。',
   },
   {
     n: '04',
-    title: '数据看不懂',
-    body: 'GA4、广告后台、店铺后台三套数字对不上，每个月的投放预算只能靠感觉分配。',
+    title: '没有人对它负责。',
+    body: '不是故意不管。只是没有任何人的职责是去发现插件坏了、证书过期了、订单悄悄进不来了。',
   },
 ]
 
@@ -401,7 +450,17 @@ export const UI = {
     // 全角句号占满 1em 但字形只在左半，需要负边距吃掉右侧空白
     tightPeriod: true,
   },
-  trust: { before: '已服务', after: '个出海品牌' },
+  trust: {
+    before: '已服务',
+    after: '个品牌',
+    // 点开后的详情面板
+    toggle: (name) => `查看 ${name} 的站点信息`,
+    visit: '访问网站',
+    noUrl: '【待填：网址】',
+    close: '收起',
+  },
+
+  workIn: { title: '我们常用的技术栈' },
 
   chat: {
     title: '先问问顾问',
@@ -428,10 +487,10 @@ export const UI = {
 
   pains: {
     num: '01',
-    title: '这些情况，是不是很熟悉？',
-    sub: '出海品牌最常见的四类站点问题。',
-    closingLead: '这些问题不是孤立的——它们通常出自同一个根因：',
-    closingStrong: '站点从一开始就没有被当作一项长期资产来建设。',
+    title: '是不是很熟悉？',
+    // 这一节的四张卡自己就说清楚了，不再加副标题
+    closingLead: '这些其实是同一个问题：',
+    closingStrong: '站点一直被当成一个项目，而不是一项资产。',
   },
 
   services: {
@@ -474,7 +533,7 @@ export const UI = {
       '提交即表示同意我们通过你留下的方式与你联系。信息仅用于本次沟通，不会用于其他用途，也不会提供给第三方。',
     doneTitle: '收到了',
     doneBefore: '我们通常在 1 个工作日内回复。如果超过 2 个工作日没收到消息，可以直接发邮件到',
-    doneEmail: '【待填：联系邮箱】',
+    doneEmail: 'yun@36tech.info',
     doneAfter: '。',
     resubmit: '再提交一次（原型演示）',
     errors: {
@@ -554,6 +613,7 @@ export default {
   UI,
   BRAND,
   CLIENTS,
+  WORK_IN,
   DOMAINS,
   HERO_VARIANTS,
   HERO_POSTERS,
