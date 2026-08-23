@@ -1,12 +1,13 @@
 import { Reveal, SectionHead } from './ui.jsx'
-import { PROCESS } from '../content.js'
+import { useContent } from '../content/index.jsx'
 import Band from './Band.jsx'
 
 export default function Process() {
+  const { PROCESS, UI } = useContent()
   return (
     <Band>
       <Reveal>
-        <SectionHead num="05" title="四步开始" zh="每一步都有明确产出，你随时知道进展到哪。" />
+        <SectionHead num={UI.process.num} title={UI.process.title} zh={UI.process.sub} />
       </Reveal>
 
       <div className="relative">

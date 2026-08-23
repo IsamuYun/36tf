@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { ContentProvider, useContent } from './content/index.jsx'
 import Nav from './components/Nav.jsx'
 import Footer from './components/Footer.jsx'
 import Tweaks from './components/Tweaks.jsx'
 import HomePage from './pages/HomePage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
+import HomePageEn from './pages/en/HomePage.jsx'
 
 /**
  * 换页时回到顶部；带 #hash 时滚到对应锚点。
@@ -35,6 +37,52 @@ function ScrollToTop() {
   return null
 }
 
+/**
+ * 按当前语言设置 <html lang> 与标签页标题、描述。
+ * 站点是纯客户端渲染的单页应用，index.html 只有一份，
+ * 所以这些只能在挂载后改；要给爬虫看的正确 lang/title，
+ * 需要预渲染或 SSR，那是另一件事。
+ */
+function DocumentMeta() {
+  const { META } = useContent()
+
+  useEffect(() => {
+    document.documentElement.lang = META.lang
+    document.title = META.title
+    const desc = document.querySelector('meta[name="description"]')
+    if (desc) desc.setAttribute('content', META.description)
+  }, [META])
+
+  return null
+}
+
+/**
+ * 一种语言的整站：内容上下文 + 导航 + 页面 + 页脚。
+ *
+ * 两种语言各挂一棵独立的路由树，首页也是各自独立的文件
+ * （HomePage.jsx / en/HomePage.jsx），这样以后改英文版的
+ * 板块顺序或增删板块，不会影响中文版。
+ */
+function Site({ locale, home: Home, tweaks, setTweaks }) {
+  return (
+    <ContentProvider locale={locale}>
+      <DocumentMeta />
+      <Nav />
+      <main>
+        <Routes>
+          <Route index element={<Home tweaks={tweaks} />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="contact" element={<ContactPage />} />
+          {/* 未知路径退回本语言首页，避免原型阶段出现空白页 */}
+          <Route path="*" element={<Home tweaks={tweaks} />} />
+        </Routes>
+      </main>
+      <Footer />
+      <Tweaks state={tweaks} setState={setTweaks} />
+    </ContentProvider>
+  )
+}
+
 export default function App() {
   const [tweaks, setTweaks] = useState({
     hero: 'main',
@@ -44,18 +92,18 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Nav />
-      <main>
-        <Routes>
-          <Route path="/" element={<HomePage tweaks={tweaks} />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          {/* 未知路径退回首页，避免原型阶段出现空白页 */}
-          <Route path="*" element={<HomePage tweaks={tweaks} />} />
-        </Routes>
-      </main>
-      <Footer />
-      <Tweaks state={tweaks} setState={setTweaks} />
+      <Routes>
+        <Route
+          path="/en/*"
+          element={
+            <Site locale="en" home={HomePageEn} tweaks={tweaks} setTweaks={setTweaks} />
+          }
+        />
+        <Route
+          path="/*"
+          element={<Site locale="cn" home={HomePage} tweaks={tweaks} setTweaks={setTweaks} />}
+        />
+      </Routes>
     </BrowserRouter>
   )
 }

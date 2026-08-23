@@ -1,36 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
 import { Reveal, SectionHead, Arrow } from './ui.jsx'
+import { useContent, useLocale } from '../content/index.jsx'
 import advisorAvatar from '../assets/logo/eva-logo.png'
 import Band from './Band.jsx'
-
-const ADVISOR = { name: 'Eva', role: '36 Tech 出海顾问' }
-
-const OPENING =
-  '你好，我是 Eva。想聊聊你的海外站点吗？说说现在最头疼的问题——站点慢、想换平台、搜不到、还是数据对不上，我来判断该从哪一步入手。'
-
-const SUGGESTIONS = [
-  '我的 Shopify 站首屏要 6 秒，怎么办？',
-  '想从 Magento 迁到 Shopify，会丢排名吗？',
-  '什么是 GEO？和 SEO 有什么区别？',
-  'AI 客服能接住多少比例的咨询？',
-]
 
 /**
  * 解析服务端归一化后的 SSE 协议，逐个吐出事件。
  * 事件形如 { type: 'thinking' } / { type: 'delta', text } / { type: 'done' } / { type: 'error' }
  * 思维链已在服务端过滤，前端拿不到也不需要。
  */
-async function* streamChat(messages, signal) {
+async function* streamChat(messages, signal, t, locale) {
   const resp = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages, locale }),
     signal,
   })
 
   if (!resp.ok) {
     const info = await resp.json().catch(() => ({}))
-    const err = new Error(info.message || `请求失败（${resp.status}）`)
+    const err = new Error(info.message || t.errRequest(resp.status))
     err.code = info.error
     throw err
   }
@@ -63,7 +52,10 @@ async function* streamChat(messages, signal) {
 }
 
 export default function ChatConsult() {
-  const [messages, setMessages] = useState([{ role: 'assistant', content: OPENING }])
+  const { UI } = useContent()
+  const locale = useLocale()
+  const t = UI.chat
+  const [messages, setMessages] = useState([{ role: 'assistant', content: t.opening }])
   const [input, setInput] = useState('')
   const [status, setStatus] = useState('idle') // idle | thinking | streaming | error
   const [error, setError] = useState(null)
@@ -96,7 +88,7 @@ export default function ChatConsult() {
 
     try {
       let acc = ''
-      for await (const evt of streamChat(next, controller.signal)) {
+      for await (const evt of streamChat(next, controller.signal, t, locale)) {
         if (evt.type === 'thinking') {
           // 推理模型在出正文前会先思考若干秒，给用户一个明确的等待状态
           setStatus('thinking')
@@ -112,7 +104,7 @@ export default function ChatConsult() {
           throw new Error(evt.message)
         }
       }
-      if (!acc) throw new Error('模型没有返回内容，请重试。')
+      if (!acc) throw new Error(t.errEmpty)
       setStatus('idle')
     } catch (e) {
       if (e.name === 'AbortError') return
@@ -142,10 +134,7 @@ export default function ChatConsult() {
     <Band>
       <Reveal>
         {/* 不给编号：01–07 是既有的内容序列，这里是插入的交互模块，编号会打乱那条线 */}
-        <SectionHead
-          title="先问问顾问"
-          zh="不确定该从哪一步入手？直接描述你的情况，Eva 会告诉你优先级。"
-        />
+        <SectionHead title={t.title} zh={t.sub} />
       </Reveal>
 
       <Reveal delay={80}>
@@ -154,22 +143,22 @@ export default function ChatConsult() {
           <div className="flex items-center gap-5 border-b border-ink/[0.08] bg-cloud px-6 py-6 md:px-8">
             <img
               src={advisorAvatar}
-              alt={`${ADVISOR.name} 头像`}
+              alt={t.advisor.avatarAlt}
               width="128"
               height="128"
               className="h-32 w-32 shrink-0 object-contain"
             />
             <div className="min-w-0">
               <div className="flex items-center gap-2.5">
-                <h3 className="font-display text-[20px] font-bold">{ADVISOR.name}</h3>
+                <h3 className="font-display text-[20px] font-bold">{t.advisor.name}</h3>
                 <span className="flex items-center gap-1.5 rounded-full bg-fox/10 px-2.5 py-1">
                   <span className="h-1.5 w-1.5 rounded-full bg-fox" />
-                  <span className="font-mono text-[10px] tracking-wide text-fox">在线</span>
+                  <span className="font-mono text-[10px] tracking-wide text-fox">{t.online}</span>
                 </span>
               </div>
-              <p className="mt-1 text-[14px] text-ink/55">{ADVISOR.role}</p>
+              <p className="mt-1 text-[14px] text-ink/55">{t.advisor.role}</p>
               <p className="mt-2.5 text-[13px] leading-relaxed text-ink/45">
-                AI 生成内容，仅供初步判断参考，不构成正式方案或报价。
+                {t.disclaimer}
               </p>
             </div>
           </div>
@@ -201,7 +190,7 @@ export default function ChatConsult() {
                             />
                           ))}
                         </span>
-                        <span className="text-[14px]">正在思考…</span>
+                        <span className="text-[14px]">{t.thinking}</span>
                       </span>
                     ) : (
                       <>
@@ -220,7 +209,7 @@ export default function ChatConsult() {
             {error && (
               <div className="mt-5 rounded-xl border border-amber/40 bg-amber/[0.07] px-4 py-3.5">
                 <p className="text-[13.5px] leading-relaxed text-ink/75">
-                  {notConfigured ? '聊天顾问还没接上模型。' : '出了点问题：'}
+                  {notConfigured ? t.errNotConfigured : t.errPrefix}
                   {!notConfigured && <span className="text-ink/60">{error.message}</span>}
                 </p>
                 {notConfigured && (
@@ -235,7 +224,7 @@ export default function ChatConsult() {
           {/* 建议问题：仅在开场时出现 */}
           {messages.length === 1 && !error && (
             <div className="flex flex-wrap gap-2 px-6 pb-5 md:px-8">
-              {SUGGESTIONS.map((s) => (
+              {t.suggestions.map((s) => (
                 <button
                   key={s}
                   onClick={() => send(s)}
@@ -256,20 +245,20 @@ export default function ChatConsult() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={onKeyDown}
-                placeholder="描述你的站点情况，Enter 发送，Shift+Enter 换行"
+                placeholder={t.placeholder}
                 className="max-h-32 min-h-[46px] flex-1 resize-none rounded-xl border border-ink/12 bg-cloud px-4 py-3 text-[15px] leading-relaxed text-ink transition-colors placeholder:text-ink/35 focus:border-fox focus:outline-none"
               />
               <button
                 onClick={() => send(input)}
                 disabled={!input.trim() || busy}
-                aria-label="发送"
+                aria-label={t.send}
                 className="group flex h-[46px] shrink-0 items-center gap-2 rounded-xl bg-fox px-5 font-display text-[14px] font-semibold text-white transition-all hover:bg-[#2a8ce8] disabled:pointer-events-none disabled:opacity-35"
               >
                 {busy ? (
                   <span className="h-3.5 w-3.5 animate-spin rounded-full border-[1.5px] border-white/40 border-t-white" />
                 ) : (
                   <>
-                    发送
+                    {t.send}
                     <Arrow className="group-hover:translate-x-0.5" />
                   </>
                 )}

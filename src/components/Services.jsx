@@ -1,17 +1,14 @@
 import { Reveal, SectionHead, Arrow } from './ui.jsx'
-import { SERVICE_GROUPS } from '../content.js'
+import { useContent } from '../content/index.jsx'
 import Band from './Band.jsx'
 
 export default function Services() {
+  const { SERVICE_GROUPS, UI } = useContent()
   return (
     <Band id="services" tone="white">
       <div>
         <Reveal>
-          <SectionHead
-            num="02"
-            title="一站式服务，四个能力域"
-            zh="你可以只用其中一项，也可以把整条链路交给我们。服务之间彼此打通，不必在多个供应商之间来回传话。"
-          />
+          <SectionHead num={UI.services.num} title={UI.services.title} zh={UI.services.sub} />
         </Reveal>
 
         <div className="grid gap-5 lg:grid-cols-2">

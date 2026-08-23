@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Reveal, SectionHead, Arrow } from '../ui.jsx'
-import { CONTACT_INFO, CONTACT_CODES } from '../../content.js'
+import { useContent } from '../../content/index.jsx'
 
 /* 四张卡片：联系信息 / 办公时间 / 小红书码 / 微信码
    结构对应参考文件里的 contactCards */
 function ContactCards() {
+  const { CONTACT_INFO, CONTACT_CODES } = useContent()
   return (
     <div className="grid gap-px overflow-hidden rounded-3xl border border-ink/[0.09] bg-ink/[0.09] sm:grid-cols-2 lg:grid-cols-4">
       <article className="flex flex-col bg-white p-7">

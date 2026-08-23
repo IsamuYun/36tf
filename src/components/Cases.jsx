@@ -1,4 +1,5 @@
 import { Reveal, SectionHead } from './ui.jsx'
+import { useContent } from '../content/index.jsx'
 import Band from './Band.jsx'
 import CaseCard from './CaseCard.jsx'
 
@@ -132,11 +133,12 @@ const CASES = [
 ]
 
 export default function Cases() {
+  const { UI } = useContent()
   return (
     <Band tone="white">
       <div>
         <Reveal>
-          <SectionHead num="06" title="做过的事" zh="两个刚交付完的项目。" />
+          <SectionHead num={UI.cases.num} title={UI.cases.title} zh={UI.cases.sub} />
         </Reveal>
 
         <div className="space-y-6">

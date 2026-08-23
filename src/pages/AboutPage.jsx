@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Reveal, Placeholder } from '../components/ui.jsx'
 import Band from '../components/Band.jsx'
-import { ABOUT_HERO, ABOUT_GAP, ABOUT_PRINCIPLES, ABOUT_CONCERNS } from '../content.js'
+import { useContent } from '../content/index.jsx'
 
 /* 页头：纯文字，不做深色 Hero。about 页保持克制。 */
 function Masthead() {
+  const { ABOUT_HERO } = useContent()
   return (
     <Band>
       <Reveal>
@@ -28,6 +29,7 @@ function Masthead() {
 
 /* 我们为什么做这件事 */
 function TheGap() {
+  const { ABOUT_GAP } = useContent()
   return (
     <Band>
       <div className="grid gap-10 lg:grid-cols-[0.42fr_1fr] lg:gap-16">
@@ -61,18 +63,18 @@ function TheGap() {
 
 /* 四条准则：四宫格，靠分隔线切分 */
 function Principles() {
+  const { ABOUT_PRINCIPLES, UI } = useContent()
+  const t = UI.about
   return (
     <>
       <Band>
         <Reveal>
           <div className="max-w-[720px]">
-            <span className="eyebrow text-ink/40">我们怎么做事</span>
+            <span className="eyebrow text-ink/40">{t.principlesEyebrow}</span>
             <h2 className="mt-5 font-display text-[26px] font-extrabold tracking-tight md:text-[32px]">
-              四条准则
+              {t.principlesTitle}
             </h2>
-            <p className="mt-5 text-[16px] leading-[1.85] text-ink/60">
-              写下来是为了让你可以拿它要求我们。
-            </p>
+            <p className="mt-5 text-[16px] leading-[1.85] text-ink/60">{t.principlesLead}</p>
           </div>
         </Reveal>
       </Band>
@@ -99,17 +101,17 @@ function Principles() {
 
 /* 团队：真实信息填充前不上线 */
 function Team() {
+  const { UI } = useContent()
+  const t = UI.about
   return (
     <Band>
       <Reveal>
         <div className="max-w-[720px]">
-          <span className="eyebrow text-ink/40">团队</span>
+          <span className="eyebrow text-ink/40">{t.teamEyebrow}</span>
           <h2 className="mt-5 font-display text-[26px] font-extrabold tracking-tight md:text-[32px]">
-            做这些事的人
+            {t.teamTitle}
           </h2>
-          <p className="mt-5 text-[16px] leading-[1.85] text-ink/60">
-            真实信息填充后上线。在此之前本模块不对外展示——虚构的团队介绍经不起核实。
-          </p>
+          <p className="mt-5 text-[16px] leading-[1.85] text-ink/60">{t.teamLead}</p>
         </div>
       </Reveal>
 
@@ -117,29 +119,28 @@ function Team() {
         <div className="mt-12 border border-dashed border-ink/15 p-7 md:p-8">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <p className="font-display text-[14.5px] font-semibold text-ink/70">
-              【待填：团队规模】·【待填：成立年份】·【待填：所在城市】
+              {t.teamMeta}
             </p>
             <span className="font-mono text-[10px] tracking-[0.16em] text-amber uppercase">
-              待补内容
+              {t.teamBadge}
             </span>
           </div>
 
           <div className="grid gap-px bg-ink/[0.1] sm:grid-cols-2">
             {[1, 2].map((n) => (
               <div key={n} className="flex gap-5 bg-cloud p-6">
-                <Placeholder label="avatar" className="h-20 w-20 shrink-0" />
+                <Placeholder label={t.teamPlaceholders.avatar} className="h-20 w-20 shrink-0" />
                 <div className="min-w-0 flex-1 space-y-2.5">
-                  <Placeholder label="姓名" className="h-6 w-1/2" />
-                  <Placeholder label="职责" className="h-6 w-2/3" />
-                  <Placeholder label="一句话背景" className="h-6 w-full" />
+                  <Placeholder label={t.teamPlaceholders.name} className="h-6 w-1/2" />
+                  <Placeholder label={t.teamPlaceholders.role} className="h-6 w-2/3" />
+                  <Placeholder label={t.teamPlaceholders.bio} className="h-6 w-full" />
                 </div>
               </div>
             ))}
           </div>
 
           <p className="mt-6 text-[13px] leading-relaxed text-ink/45">
-            团队人数少不必回避——写「一支 X 人的小团队」，并说明为什么小是优势：同时只接有限项目、
-            每个项目由资深成员直接负责、没有层层转包。
+            {t.teamNote}
           </p>
         </div>
       </Reveal>
@@ -149,6 +150,8 @@ function Team() {
 
 /* 常见顾虑：每条之间本身就是分隔线 */
 function Concerns() {
+  const { ABOUT_CONCERNS, UI } = useContent()
+  const t = UI.about
   const [open, setOpen] = useState(0)
 
   return (
@@ -156,9 +159,9 @@ function Concerns() {
       <div className="grid gap-10 lg:grid-cols-[0.42fr_1fr] lg:gap-16">
         <Reveal>
           <div>
-            <span className="eyebrow text-ink/40">你可能想问</span>
+            <span className="eyebrow text-ink/40">{t.concernsEyebrow}</span>
             <h2 className="mt-5 font-display text-[26px] font-extrabold tracking-tight md:text-[32px]">
-              常见顾虑
+              {t.concernsTitle}
             </h2>
           </div>
         </Reveal>

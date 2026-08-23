@@ -1,110 +1,9 @@
-import { useEffect, useState } from 'react'
 import { Button, Arrow, RingMotif } from './ui.jsx'
-import { HERO_VARIANTS } from '../content.js'
-
-const CHAR_STEP = 34 // 每字符错开毫秒数
-const DWELL = 4000 // 每句停留时长
-
-/**
- * Hero 主标题里的一个短句：
- * 逐字符绕底边 3D 翻起 + 下方细下划线 + 句末 4×4px 品牌蓝方块。
- * 整句 nowrap，避免中文从句中断行。
- */
-function HeroPhrase({ text, delay = 0, className = '' }) {
-  const chars = Array.from(text)
-  const tail = delay + chars.length * CHAR_STEP
-
-  return (
-    <span className={`relative inline-block whitespace-nowrap pb-[0.3em] ${className}`}>
-      {chars.map((ch, i) => (
-        <span key={i} className="hero-char-outer">
-          <span className="hero-char" style={{ animationDelay: `${delay + i * CHAR_STEP}ms` }}>
-            {ch}
-          </span>
-        </span>
-      ))}
-
-      {/* 句末句号，品牌蓝。
-          -mr 用来吃掉全角句号右侧的空白——中文句号占满 1em 但字形只在左半，
-          不修的话下划线会比可见的句号多出一截。 */}
-      <span
-        className="hero-dot -mr-[0.45em] inline-block text-fox"
-        style={{ animationDelay: `${tail + 60}ms` }}
-      >
-        。
-      </span>
-
-      {/* 下划线：8px 高 */}
-      <span
-        aria-hidden="true"
-        className="hero-rule absolute bottom-0 left-0 h-2 w-full bg-white/30"
-        style={{ animationDelay: `${delay + 120}ms` }}
-      />
-    </span>
-  )
-}
-
-/**
- * 短句轮播：一次只显示一句，每句停留 DWELL 毫秒后切换。
- * - 用 inline-grid 把四句叠在同一格并全部占位（其中三句 invisible），
- *   容器自动等于最宽一句的宽度，切换时不会左右跳动。
- * - key={index} 让 React 重新挂载，CSS 动画随之重播。
- * - 视觉层对读屏隐藏，另给一份完整的四句文本，保证语义与 SEO 不因轮播而残缺。
- * - 系统开启「减少动效」时不轮播，四句静态并排显示。
- */
-function PhraseRotator({ phrases }) {
-  const [active, setActive] = useState(0)
-  const [reduced, setReduced] = useState(false)
-
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const sync = () => setReduced(mq.matches)
-    sync()
-    mq.addEventListener('change', sync)
-    return () => mq.removeEventListener('change', sync)
-  }, [])
-
-  useEffect(() => {
-    if (reduced) return
-    const timer = setInterval(() => setActive((i) => (i + 1) % phrases.length), DWELL)
-    return () => clearInterval(timer)
-  }, [reduced, phrases.length])
-
-  if (reduced) {
-    return (
-      <span className="mt-2 block">
-        {phrases.map((p) => (
-          <HeroPhrase key={p} text={p} className="mr-[0.5em] last:mr-0" />
-        ))}
-      </span>
-    )
-  }
-
-  return (
-    <span className="mt-2 block">
-      <span className="inline-grid align-bottom" aria-hidden="true">
-        {/* 撑宽用的隐形副本，保证容器宽度 = 最宽的一句 */}
-        {phrases.map((p) => (
-          <span
-            key={p}
-            className="invisible col-start-1 row-start-1 justify-self-start whitespace-nowrap pb-[0.3em]"
-          >
-            {p}。
-          </span>
-        ))}
-        {/* justify-self-start：grid 子项默认拉伸，不加的话下划线会跟着最宽一句的宽度走 */}
-        <HeroPhrase
-          key={active}
-          text={phrases[active]}
-          className="col-start-1 row-start-1 justify-self-start"
-        />
-      </span>
-      <span className="sr-only">{phrases.join('、')}。</span>
-    </span>
-  )
-}
+import { PhraseRotator } from './HeroPhrase.jsx'
+import { useContent } from '../content/index.jsx'
 
 export default function Hero({ variantId = 'main', showRings = true }) {
+  const { HERO_VARIANTS, UI } = useContent()
   const variant = HERO_VARIANTS.find((v) => v.id === variantId) ?? HERO_VARIANTS[0]
 
   // 全宽通栏深色区，紧接在导航之后（导航自身占位，不叠压）。
@@ -155,15 +54,19 @@ export default function Hero({ variantId = 'main', showRings = true }) {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-glint opacity-70" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-glint" />
               </span>
-              <span className="eyebrow text-glint">
-                为中国出海品牌打造的海外站点技术团队
-              </span>
+              <span className="eyebrow text-glint">{UI.hero.eyebrow}</span>
             </div>
 
             <h1 className="font-display text-[clamp(28px,4.4vw,50px)] font-extrabold leading-[1.28] tracking-tight text-white">
               {variant.lines.map((line, i) =>
                 Array.isArray(line) ? (
-                  <PhraseRotator key={i} phrases={line} />
+                  <PhraseRotator
+                    key={i}
+                    phrases={line}
+                    period={UI.hero.period}
+                    tight={UI.hero.tightPeriod}
+                    joiner={UI.hero.joiner}
+                  />
                 ) : (
                   <span key={i} className="block">
                     {line}
@@ -173,23 +76,22 @@ export default function Hero({ variantId = 'main', showRings = true }) {
             </h1>
 
             <p className="mt-7 max-w-[600px] text-[16px] leading-[1.75] text-white/72 md:text-[17px]">
-              从电商建站、平台迁移到 AI 客服与数据分析，36 Tech
-              用一个团队承接你海外站点的全部技术环节——
-              <span className="font-semibold text-white">中文沟通，海外标准。</span>
+              {UI.hero.leadBefore}
+              <span className="font-semibold text-white">{UI.hero.leadStrong}</span>
             </p>
 
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Button as="a" href="#diagnose" variant="amber" className="group">
-                获取免费站点诊断
+                {UI.hero.ctaPrimary}
                 <Arrow className="group-hover:translate-x-1" />
               </Button>
               <Button as="a" href="#services" variant="ghostLight" className="group">
-                查看服务全景
+                {UI.hero.ctaSecondary}
               </Button>
             </div>
 
             <p className="mt-6 font-mono text-[11.5px] tracking-wide text-white/45">
-              免费诊断 · 3 个工作日出具报告 · 不满意不推进下一步
+              {UI.hero.note}
             </p>
           </div>
         </div>

@@ -4,15 +4,19 @@
  * 【待填：xxx】为占位符，上线前必须替换或删除，清单见 00-文案总纲.txt
  */
 
-import jwFabric from './assets/trust-bar/jw-fabric-logo.png'
-import raidenAntiques from './assets/trust-bar/raiden-antiques-logo.png'
-import cesasc from './assets/trust-bar/cesasc-logo.png'
-import seren from './assets/trust-bar/seren-logo.png'
-import boxOfFun from './assets/trust-bar/box-of-fun-logo.png'
-import sindyFish from './assets/trust-bar/sindy-fish-logo.png'
-import chest from './assets/trust-bar/chest-logo.png'
-import rednoteCode from './assets/contact/rednote-code.jpg'
-import wechatCode from './assets/contact/wechat-code.jpg'
+import jwFabric from '../assets/trust-bar/jw-fabric-logo.png'
+import raidenAntiques from '../assets/trust-bar/raiden-antiques-logo.png'
+import cesasc from '../assets/trust-bar/cesasc-logo.png'
+import seren from '../assets/trust-bar/seren-logo.png'
+import boxOfFun from '../assets/trust-bar/box-of-fun-logo.png'
+import sindyFish from '../assets/trust-bar/sindy-fish-logo.png'
+import chest from '../assets/trust-bar/chest-logo.png'
+import heroPoster1 from '../assets/hero/hero-01.jpg'
+import heroPoster2 from '../assets/hero/hero-02.jpg'
+import heroPoster3 from '../assets/hero/hero-03.jpg'
+import heroPoster4 from '../assets/hero/hero-04.jpg'
+import rednoteCode from '../assets/contact/rednote-code.jpg'
+import wechatCode from '../assets/contact/wechat-code.jpg'
 
 export const BRAND = '36 Tech'
 
@@ -42,6 +46,32 @@ export const HERO_VARIANTS = [
   { id: 'a', label: '备选 A', lines: ['你的海外站点，', '值得一个真正懂技术的团队。'] },
   { id: 'b', label: '备选 B', lines: ['出海站点的全部技术环节，', '一个团队全包。'] },
   { id: 'c', label: '备选 C', lines: ['别让一个跑不动的网站，', '拖累你的海外生意。'] },
+]
+
+/* 首页 Hero 右侧轮播的四张网站海报，与英文版同一组图。
+   顺序即展示顺序；label 用作缩略图按钮的无障碍名称。
+   都是设计稿本身，alt 描述画面，不声称是谁的项目。 */
+export const HERO_POSTERS = [
+  {
+    src: heroPoster1,
+    label: '阻燃面料电商站',
+    alt: '阻燃面料供应商的首页设计：超大「Fabric」字样压在一摞彩色面料上',
+  },
+  {
+    src: heroPoster2,
+    label: '旅游目的地站点',
+    alt: '旅游站点设计：阿尔卑斯湖景、超大「Travel」字样，下方一排目的地卡片',
+  },
+  {
+    src: heroPoster3,
+    label: 'Web 3D 落地页',
+    alt: '沉浸式 Web 3D 服务的落地页设计：左侧插画面板，右侧五张价值点卡片',
+  },
+  {
+    src: heroPoster4,
+    label: '心理咨询站点',
+    alt: '心理咨询机构的三段式版面设计：静谧海景配图与「咨询如何进行」的说明网格',
+  },
 ]
 
 export const PAINS = [
@@ -318,3 +348,229 @@ export const CONTACT_CODES = [
 export const MARKETS = ['北美', '欧洲', '日韩', '东南亚', '中东', '其他']
 
 export const STAGES = ['还没有海外站点', '已有站点需要改造', '只是先了解一下']
+
+/* ------------------------------------------------------------------
+   界面文案 —— 组件里除内容数据之外的所有可见字符串。
+   放这里而不是散在组件中，是为了让中英两版各自独立可改。
+------------------------------------------------------------------ */
+
+export const UI = {
+  nav: {
+    services: '服务',
+    links: [
+      { label: '出海一站式', to: '/#services' },
+      { label: '关于我们', to: '/about' },
+    ],
+    cta: '免费诊断',
+    tagline: '中文沟通 · 海外标准',
+    openMenu: '打开菜单',
+    closeMenu: '关闭菜单',
+    // 指向另一种语言的首页；两个文件各写各的，不做自动推导
+    lang: { label: 'EN', href: '/en', aria: 'Switch to English' },
+  },
+
+  hero: {
+    eyebrow: '为中国出海品牌打造的海外站点技术团队',
+    leadBefore:
+      '从电商建站、平台迁移到 AI 客服与数据分析，36 Tech 用一个团队承接你海外站点的全部技术环节——',
+    leadStrong: '中文沟通，海外标准。',
+    ctaPrimary: '获取免费站点诊断',
+    ctaSecondary: '查看服务全景',
+    note: '免费诊断 · 3 个工作日出具报告 · 不满意不推进下一步',
+    // 轮播短句的句末标点与读屏用的连接符
+    period: '。',
+    joiner: '、',
+    // 全角句号占满 1em 但字形只在左半，需要负边距吃掉右侧空白
+    tightPeriod: true,
+  },
+
+  /* 首页 Hero：左文右图，与英文版同一套版式，文案是原来那版 Hero 的原文。
+     title 的数组项 = 逐字翻起的短句轮播，这里轮播四个能力域。
+     dwellMs 为每张海报的停留时长。 */
+  heroShowcase: {
+    eyebrow: '为中国出海品牌打造的海外站点技术团队',
+    title: ['品牌的出海网站，应该', DOMAINS],
+    lead:
+      '从电商建站、平台迁移到 AI 客服与数据分析，36 Tech 用一个团队承接你海外站点的全部技术环节——中文沟通，海外标准。',
+    cta: '获取免费站点诊断',
+    posterHint: '近期作品',
+    dwellMs: 8000,
+    // 轮播短句的句末标点与读屏用的连接符
+    period: '。',
+    joiner: '、',
+    // 全角句号占满 1em 但字形只在左半，需要负边距吃掉右侧空白
+    tightPeriod: true,
+  },
+  trust: { before: '已服务', after: '个出海品牌' },
+
+  chat: {
+    title: '先问问顾问',
+    sub: '不确定该从哪一步入手？直接描述你的情况，Eva 会告诉你优先级。',
+    advisor: { name: 'Eva', role: '36 Tech 出海顾问', avatarAlt: 'Eva 头像' },
+    online: '在线',
+    disclaimer: 'AI 生成内容，仅供初步判断参考，不构成正式方案或报价。',
+    opening:
+      '你好，我是 Eva。想聊聊你的海外站点吗？说说现在最头疼的问题——站点慢、想换平台、搜不到、还是数据对不上，我来判断该从哪一步入手。',
+    suggestions: [
+      '我的 Shopify 站首屏要 6 秒，怎么办？',
+      '想从 Magento 迁到 Shopify，会丢排名吗？',
+      '什么是 GEO？和 SEO 有什么区别？',
+      'AI 客服能接住多少比例的咨询？',
+    ],
+    thinking: '正在思考…',
+    placeholder: '描述你的站点情况，Enter 发送，Shift+Enter 换行',
+    send: '发送',
+    errNotConfigured: '聊天顾问还没接上模型。',
+    errPrefix: '出了点问题：',
+    errEmpty: '模型没有返回内容，请重试。',
+    errRequest: (status) => `请求失败（${status}）`,
+  },
+
+  pains: {
+    num: '01',
+    title: '这些情况，是不是很熟悉？',
+    sub: '出海品牌最常见的四类站点问题。',
+    closingLead: '这些问题不是孤立的——它们通常出自同一个根因：',
+    closingStrong: '站点从一开始就没有被当作一项长期资产来建设。',
+  },
+
+  services: {
+    num: '02',
+    title: '一站式服务，四个能力域',
+    sub: '你可以只用其中一项，也可以把整条链路交给我们。服务之间彼此打通，不必在多个供应商之间来回传话。',
+  },
+
+  paths: { num: '03', title: '你现在处在哪个阶段？' },
+
+  whyUs: { num: '04', title: '海外供应商懂标准，国内供应商懂你。我们两样都要。' },
+
+  process: { num: '05', title: '四步开始', sub: '每一步都有明确产出，你随时知道进展到哪。' },
+
+  cases: { num: '06', title: '做过的事', sub: '两个刚交付完的项目。' },
+
+  faq: { num: '07', title: '常见问题' },
+
+  form: {
+    eyebrow: '免费诊断',
+    title: ['先看看你的站点', '现在什么状况'],
+    leadBefore: '提交站点地址，3 个工作日内收到一份书面诊断报告。',
+    leadStrong: '免费，且不绑定任何后续合作。',
+    bullets: ['站点性能与技术债现状', 'Google 与 AI 搜索的可见度', '数据口径是否可信'],
+    fields: [
+      { k: 'site', label: '站点地址', ph: 'https://your-brand.com', hint: '还没有站点可填「暂无」' },
+      { k: 'name', label: '你的称呼', ph: '怎么称呼您' },
+      { k: 'contact', label: '联系方式', ph: '邮箱或微信号', hint: '我们优先用你填写的方式联系' },
+    ],
+    // 站点地址一栏允许的「我没有站点」写法，跳过网址校验
+    noSite: '暂无',
+    marketsLabel: '目标市场',
+    stageLabel: '你所处的阶段',
+    problemLabel: '你现在最头疼的问题',
+    optional: '选填',
+    problemPh: '比如：站点很慢、想换平台但怕丢排名、海外客服跟不上、数据对不上……',
+    submit: '提交，获取诊断',
+    submitting: '正在提交…',
+    privacy:
+      '提交即表示同意我们通过你留下的方式与你联系。信息仅用于本次沟通，不会用于其他用途，也不会提供给第三方。',
+    doneTitle: '收到了',
+    doneBefore: '我们通常在 1 个工作日内回复。如果超过 2 个工作日没收到消息，可以直接发邮件到',
+    doneEmail: '【待填：联系邮箱】',
+    doneAfter: '。',
+    resubmit: '再提交一次（原型演示）',
+    errors: {
+      required: '这项是必填的',
+      url: '看起来不像一个网址，检查一下？',
+      contact: '留个能联系上你的邮箱或微信号',
+    },
+  },
+
+  footer: {
+    blurb: '出海品牌的网站，跑得快、找得到、答得上、算得清。',
+    meta: [
+      ['城市', 'Irvine, CA'],
+      ['邮箱', 'yun@36tech.info'],
+      ['微信', 'IsamuYun'],
+    ],
+    privacy: '隐私政策',
+    terms: '服务条款',
+  },
+
+  about: {
+    principlesEyebrow: '我们怎么做事',
+    principlesTitle: '四条准则',
+    principlesLead: '写下来是为了让你可以拿它要求我们。',
+    teamEyebrow: '团队',
+    teamTitle: '做这些事的人',
+    teamLead: '真实信息填充后上线。在此之前本模块不对外展示——虚构的团队介绍经不起核实。',
+    teamMeta: '【待填：团队规模】·【待填：成立年份】·【待填：所在城市】',
+    teamBadge: '待补内容',
+    teamPlaceholders: { avatar: 'avatar', name: '姓名', role: '职责', bio: '一句话背景' },
+    teamNote:
+      '团队人数少不必回避——写「一支 X 人的小团队」，并说明为什么小是优势：同时只接有限项目、每个项目由资深成员直接负责、没有层层转包。',
+    concernsEyebrow: '你可能想问',
+    concernsTitle: '常见顾虑',
+  },
+
+  contact: {
+    aria: '联系我们',
+    title: '欢迎联系',
+    infoTitle: '联系信息',
+    phoneLabel: '电话',
+    emailLabel: '邮箱',
+    hoursTitle: '办公时间',
+    formEyebrow: '写点什么',
+    formTitle: '发送消息',
+    formLead: '不用准备材料。把站点地址和你最头疼的问题写下来就行，我们看完再回你。',
+    nameLabel: '姓名',
+    namePh: '请输入姓名',
+    emailPh: '请输入邮箱地址',
+    messageLabel: '留言',
+    messagePh: '请告诉我们需要什么帮助',
+    companyLabel: '公司',
+    send: '发送',
+    sending: '发送中…',
+    errRequired: '请填写姓名、邮箱和留言。',
+    errRequest: (status) => `请求失败，状态码：${status}`,
+    errGeneric: '发送时出现问题，请稍后再试。',
+    success: (name) => `${name}，感谢留言。我们已收到你的信息。`,
+    privacy: '信息仅用于本次沟通，不会用于其他用途，也不会提供给第三方。',
+  },
+}
+
+
+/* 文档级元信息：<html lang> 与标签页标题、描述 */
+export const META = {
+  lang: 'zh-CN',
+  title: '出海品牌的海外站点技术团队 | 36 Tech',
+  description:
+    '为中国出海品牌提供海外站点一站式技术服务：电商建站、平台迁移、网站现代化、AI 客服与知识库、SEO/GEO、数据分析。中文沟通，海外标准。免费站点诊断，3 个工作日出报告。',
+}
+
+/* 聚合默认导出，供 content/index.jsx 的语言上下文使用。
+   具名导出保留，个别地方仍可直接 import。 */
+export default {
+  locale: 'cn',
+  META,
+  UI,
+  BRAND,
+  CLIENTS,
+  DOMAINS,
+  HERO_VARIANTS,
+  HERO_POSTERS,
+  PAINS,
+  SERVICE_GROUPS,
+  PATHS,
+  WHY_US,
+  PROCESS,
+  FAQS,
+  NAV_SERVICES,
+  FOOTER_COLUMNS,
+  ABOUT_HERO,
+  ABOUT_GAP,
+  ABOUT_PRINCIPLES,
+  ABOUT_CONCERNS,
+  CONTACT_INFO,
+  CONTACT_CODES,
+  MARKETS,
+  STAGES,
+}

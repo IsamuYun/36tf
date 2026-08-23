@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { config, missingEnv } from '../config.js'
-import { SYSTEM_PROMPT } from '../prompt.js'
+import { systemPromptFor } from '../prompt.js'
 
 const router = Router()
 
@@ -36,6 +36,8 @@ router.post('/', async (req, res) => {
   }
 
   const { messages, error } = normalizeMessages(req.body?.messages)
+  // 前端按当前页面语言传 locale，决定 Eva 用哪种语言回答
+  const systemPrompt = systemPromptFor(req.body?.locale)
   if (error) {
     return res.status(400).json({ error: 'bad_request', message: error })
   }
@@ -56,7 +58,7 @@ router.post('/', async (req, res) => {
       body: JSON.stringify({
         model: config.qwen.model,
         stream: true,
-        messages: [{ role: 'system', content: SYSTEM_PROMPT }, ...messages],
+        messages: [{ role: 'system', content: systemPrompt }, ...messages],
       }),
       signal: controller.signal,
     })

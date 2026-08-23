@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import { Reveal, SectionHead } from './ui.jsx'
-import { FAQS } from '../content.js'
+import { useContent } from '../content/index.jsx'
 import Band from './Band.jsx'
 
 export default function Faq() {
+  const { FAQS, UI } = useContent()
   const [open, setOpen] = useState(0)
 
   return (
     <Band>
       <div className="mx-auto max-w-[820px]">
         <Reveal>
-          <SectionHead num="07" title="常见问题" />
+          <SectionHead num={UI.faq.num} title={UI.faq.title} />
         </Reveal>
 
         {FAQS.map((f, i) => {

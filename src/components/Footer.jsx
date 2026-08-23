@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
-import { BRAND, FOOTER_COLUMNS } from '../content.js'
+import { useContent, useHref } from '../content/index.jsx'
 
 export default function Footer() {
+  const { BRAND, FOOTER_COLUMNS, UI } = useContent()
+  const href = useHref()
   return (
     <footer className="wrap pb-14 pt-20 md:pt-24">
       <div className="grid gap-12 lg:grid-cols-[1.3fr_2fr]">
@@ -19,15 +21,11 @@ export default function Footer() {
           </div>
 
           <p className="mt-5 max-w-[300px] text-[14px] leading-[1.75] text-ink/55">
-            出海品牌的网站，跑得快、找得到、答得上、算得清。
+            {UI.footer.blurb}
           </p>
 
           <dl className="mt-7 space-y-2 font-mono text-[12px] text-ink/45">
-            {[
-              ['城市', 'Irvine, CA'],
-              ['邮箱', 'yun@36tech.info'],
-              ['微信', 'IsamuYun'],
-            ].map(([k, v]) => (
+            {UI.footer.meta.map(([k, v]) => (
               <div key={k} className="flex gap-3">
                 <dt className="w-8 shrink-0 text-ink/30">{k}</dt>
                 <dd>{v}</dd>
@@ -52,7 +50,7 @@ export default function Footer() {
                           {label}
                         </a>
                       ) : (
-                        <Link to={l.to} className={cls}>
+                        <Link to={href(l.to)} className={cls}>
                           {label}
                         </Link>
                       )}
@@ -69,10 +67,10 @@ export default function Footer() {
         <p className="font-mono">© 2018 – 2026 {BRAND}</p>
         <div className="flex gap-6">
           <a href="#top" className="transition-colors hover:text-fox">
-            隐私政策
+            {UI.footer.privacy}
           </a>
           <a href="#top" className="transition-colors hover:text-fox">
-            服务条款
+            {UI.footer.terms}
           </a>
         </div>
       </div>

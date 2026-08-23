@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Arrow } from './ui.jsx'
-import { BRAND, SERVICE_GROUPS } from '../content.js'
+import { useContent, useHref } from '../content/index.jsx'
 
 export default function Nav() {
+  const { BRAND, SERVICE_GROUPS, UI } = useContent()
+  const href = useHref()
   const [scrolled, setScrolled] = useState(false)
   const [openMenu, setOpenMenu] = useState(false) // 桌面端「服务」下拉
   const [openMobile, setOpenMobile] = useState(false)
@@ -38,7 +40,7 @@ export default function Nav() {
     >
       <div className="wrap flex h-[72px] items-center justify-between gap-6">
         {/* 品牌 */}
-        <Link to="/" className="flex shrink-0 items-center gap-2.5">
+        <Link to={href('/')} className="flex shrink-0 items-center gap-2.5">
           <img
             src="/36-tech-logo.png"
             alt=""
@@ -64,7 +66,7 @@ export default function Nav() {
               aria-haspopup="true"
               onClick={() => setOpenMenu((v) => !v)}
             >
-              服务
+              {UI.nav.services}
               <svg
                 viewBox="0 0 10 6"
                 width="9"
@@ -92,7 +94,7 @@ export default function Nav() {
                     {g.items.map((it) => (
                       <a
                         key={it.no}
-                        href="/#services"
+                        href={href('/#services')}
                         className="group block rounded-lg px-2 py-2 transition-colors hover:bg-cloud"
                         onClick={() => setOpenMenu(false)}
                       >
@@ -108,13 +110,10 @@ export default function Nav() {
             </div>
           </div>
 
-          {[
-            { label: '出海一站式', to: '/#services' },
-            { label: '关于我们', to: '/about' },
-          ].map((item) => (
+          {UI.nav.links.map((item) => (
             <Link
               key={item.label}
-              to={item.to}
+              to={href(item.to)}
               className="rounded-full px-4 py-2 text-[14.5px] font-medium text-ink/75 transition-colors hover:text-ink"
             >
               {item.label}
@@ -124,23 +123,33 @@ export default function Nav() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {/* 语言切换：直接指向另一种语言的首页，不做路径映射——
+              两版页面结构可以各自演化，逐页对应迟早会失效。 */}
+          <Link
+            to={UI.nav.lang.href}
+            aria-label={UI.nav.lang.aria}
+            className="rounded-full border border-ink/12 px-3 py-1.5 font-mono text-[12px] tracking-wide text-ink/60 transition-colors hover:border-fox hover:text-fox"
+          >
+            {UI.nav.lang.label}
+          </Link>
+
           {/* 显隐必须放在外层：Button 基础样式含 inline-flex，与 hidden 同为 display
               工具类，胜负取决于 Tailwind 生成顺序而非 class 字符串顺序。 */}
           <span className="hidden sm:block">
             <Button
               as="a"
-              href="/#diagnose"
+              href={href('/#diagnose')}
               variant="amber"
               className="!px-6 !py-2.5 !text-[14px]"
             >
-              免费诊断
+              {UI.nav.cta}
             </Button>
           </span>
 
           {/* 汉堡 */}
           <button
             className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/12 lg:hidden"
-            aria-label={openMobile ? '关闭菜单' : '打开菜单'}
+            aria-label={openMobile ? UI.nav.closeMenu : UI.nav.openMenu}
             aria-expanded={openMobile}
             onClick={() => setOpenMobile((v) => !v)}
           >
@@ -171,14 +180,14 @@ export default function Nav() {
         }`}
       >
         <div className="wrap space-y-5 py-6">
-          <p className="eyebrow text-ink/40">中文沟通 · 海外标准</p>
+          <p className="eyebrow text-ink/40">{UI.nav.tagline}</p>
           {SERVICE_GROUPS.map((g) => (
             <div key={g.domain}>
               <div className="eyebrow mb-1.5 text-fox">{g.domain}</div>
               {g.items.map((it) => (
                 <a
                   key={it.no}
-                  href="/#services"
+                  href={href('/#services')}
                   onClick={() => setOpenMobile(false)}
                   className="block py-1.5 font-display text-[15px] font-semibold"
                 >
@@ -188,13 +197,10 @@ export default function Nav() {
             </div>
           ))}
           <div className="flex flex-col gap-2 border-t border-ink/10 pt-4">
-            {[
-              { label: '出海一站式', to: '/#services' },
-              { label: '关于我们', to: '/about' },
-            ].map((item) => (
+            {UI.nav.links.map((item) => (
               <Link
                 key={item.label}
-                to={item.to}
+                to={href(item.to)}
                 onClick={() => setOpenMobile(false)}
                 className="py-1 text-[15px] text-ink/75"
               >
@@ -202,8 +208,14 @@ export default function Nav() {
               </Link>
             ))}
           </div>
-          <Button as="a" href="/#diagnose" variant="amber" className="w-full" onClick={() => setOpenMobile(false)}>
-            免费诊断 <Arrow />
+          <Button
+            as="a"
+            href={href('/#diagnose')}
+            variant="amber"
+            className="w-full"
+            onClick={() => setOpenMobile(false)}
+          >
+            {UI.nav.cta} <Arrow />
           </Button>
         </div>
       </div>

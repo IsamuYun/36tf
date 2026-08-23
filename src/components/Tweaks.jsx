@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { HERO_VARIANTS } from '../content.js'
+import { useContent } from '../content/index.jsx'
 
 /**
  * 设计参数面板。收起时完全隐藏，演示时页面看起来就是成品。
  */
 export default function Tweaks({ state, setState }) {
+  const { HERO_VARIANTS } = useContent()
   const [open, setOpen] = useState(false)
 
   const Row = ({ label, children }) => (

@@ -1,16 +1,13 @@
 import { Reveal, SectionHead } from './ui.jsx'
-import { PAINS } from '../content.js'
+import { useContent } from '../content/index.jsx'
 import Band from './Band.jsx'
 
 export default function Pains() {
+  const { PAINS, UI } = useContent()
   return (
     <Band>
       <Reveal>
-        <SectionHead
-          num="01"
-          title="这些情况，是不是很熟悉？"
-          zh="出海品牌最常见的四类站点问题。"
-        />
+        <SectionHead num={UI.pains.num} title={UI.pains.title} zh={UI.pains.sub} />
       </Reveal>
 
       <div className="grid gap-px overflow-hidden rounded-3xl bg-ink/[0.08] sm:grid-cols-2">
@@ -30,10 +27,8 @@ export default function Pains() {
 
       <Reveal delay={120}>
         <p className="mx-auto mt-14 max-w-[620px] text-center text-[16px] leading-[1.8] text-ink/70 md:text-[17px]">
-          这些问题不是孤立的——它们通常出自同一个根因：
-          <span className="font-semibold text-ink">
-            站点从一开始就没有被当作一项长期资产来建设。
-          </span>
+          {UI.pains.closingLead}
+          <span className="font-semibold text-ink">{UI.pains.closingStrong}</span>
         </p>
       </Reveal>
     </Band>

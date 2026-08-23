@@ -1,12 +1,13 @@
 import { Reveal, SectionHead, Button, Arrow, RingMotif } from './ui.jsx'
-import { PATHS } from '../content.js'
+import { useContent } from '../content/index.jsx'
 import Band from './Band.jsx'
 
 export default function Paths() {
+  const { PATHS, UI } = useContent()
   return (
     <Band>
       <Reveal>
-        <SectionHead num="03" title="你现在处在哪个阶段？" align="center" />
+        <SectionHead num={UI.paths.num} title={UI.paths.title} align="center" />
       </Reveal>
 
       <div className="grid gap-5 md:grid-cols-2">

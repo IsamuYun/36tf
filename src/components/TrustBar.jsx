@@ -1,6 +1,6 @@
 import { Reveal } from './ui.jsx'
 import Band from './Band.jsx'
-import { CLIENTS } from '../content.js'
+import { useContent } from '../content/index.jsx'
 
 /**
  * 首页 S2 · 信任背书条
@@ -11,11 +11,12 @@ import { CLIENTS } from '../content.js'
  * 标题自带内边距，不走 Band 的统一 padding。
  */
 export default function TrustBar() {
+  const { CLIENTS, UI } = useContent()
   return (
     <Band flush>
       <Reveal>
         <p className="px-6 pb-6 pt-10 font-display text-[19px] font-semibold text-ink/70 md:px-10">
-          已服务 <span className="text-fox">{CLIENTS.length}</span> 个出海品牌
+          {UI.trust.before} <span className="text-fox">{CLIENTS.length}</span> {UI.trust.after}
         </p>
       </Reveal>
 

@@ -1,16 +1,14 @@
 import { Reveal, SectionHead } from './ui.jsx'
-import { WHY_US } from '../content.js'
+import { useContent } from '../content/index.jsx'
 import Band from './Band.jsx'
 
 export default function WhyUs() {
+  const { WHY_US, UI } = useContent()
   return (
     <Band tone="white">
       <div>
         <Reveal>
-          <SectionHead
-            num="04"
-            title="海外供应商懂标准，国内供应商懂你。我们两样都要。"
-          />
+          <SectionHead num={UI.whyUs.num} title={UI.whyUs.title} />
         </Reveal>
 
         <div className="grid gap-10 md:grid-cols-3 md:gap-8">
