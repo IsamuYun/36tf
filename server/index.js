@@ -3,6 +3,8 @@ import cors from 'cors'
 import { config, missingEnv, missingMailEnv, configSummary } from './config.js'
 import chatRouter from './routes/chat.js'
 import contactRouter from './routes/contact.js'
+import propertyRouter from './routes/property.js'
+import crespanRouter from './routes/crespan.js'
 
 const app = express()
 
@@ -21,11 +23,19 @@ app.get('/api/health', (req, res) => {
     ok: true,
     chat: { configured: missing.length === 0, missing, model: config.qwen.model || null },
     contact: { configured: missingMailEnv().length === 0, missing: missingMailEnv() },
+    property: { configured: Boolean(config.attom.apiKey) },
+    crespan: {
+      configured: missing.length === 0 && Boolean(config.attom.apiKey),
+      enabled: config.crespan.enabled,
+      codeRequired: Boolean(config.crespan.accessCode),
+    },
   })
 })
 
 app.use('/api/chat', chatRouter)
 app.use('/api/contact', contactRouter)
+app.use('/api/property', propertyRouter)
+app.use('/api/crespan', crespanRouter)
 
 // 兜底错误处理，避免异常直接把进程带崩
 app.use((err, req, res, next) => {
@@ -48,5 +58,14 @@ app.listen(config.port, config.host, () => {
   if (mailMissing.length) {
     console.warn(`  ⚠ 缺少 ${mailMissing.join('、')}，联系表单将返回 503`)
   }
+  if (!config.attom.apiKey) {
+    console.warn('  ⚠ 缺少 ATTOM_API_KEY，房产查询接口将返回 503')
+  }
+  const gate = !config.crespan.enabled
+    ? '已下线（CRESPAN_ENABLED=false）'
+    : config.crespan.accessCode
+      ? '需访问码'
+      : '公开（未设 CRESPAN_ACCESS_CODE）'
+  console.log(`  CRESpan   ${gate}`)
   console.log('')
 })

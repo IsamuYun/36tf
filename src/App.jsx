@@ -8,6 +8,8 @@ import HomePage from './pages/HomePage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
 import HomePageEn from './pages/en/HomePage.jsx'
+import PropertyPage from './pages/PropertyPage.jsx'
+import CrespanPage from './pages/CrespanPage.jsx'
 
 /**
  * 换页时回到顶部；带 #hash 时滚到对应锚点。
@@ -93,6 +95,10 @@ export default function App() {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
+        {/* ATTOM 接口测试页：独立页面，不套主站导航与页脚 */}
+        <Route path="/property" element={<PropertyPage />} />
+        {/* CRESpan：自然语言查商业地产，同样独立于主站布局 */}
+        <Route path="/crespan" element={<CrespanPage />} />
         <Route
           path="/cn/*"
           element={<Site locale="cn" home={HomePage} tweaks={tweaks} setTweaks={setTweaks} />}

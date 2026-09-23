@@ -33,6 +33,25 @@ export const config = {
     from: process.env.CONTACT_FROM?.trim() || process.env.SMTP_USER?.trim(),
     to: process.env.CONTACT_TO?.trim(),
   },
+  // ATTOM 房产数据接口。未配置密钥时 /api/property/query 返回 503。
+  attom: {
+    apiKey: process.env.ATTOM_API_KEY?.trim(),
+    baseUrl: (
+      process.env.ATTOM_BASE_URL?.trim() || 'https://api.gateway.attomdata.com/propertyapi/v1.0.0'
+    ).replace(/\/+$/, ''),
+    timeoutMs: Number(process.env.ATTOM_TIMEOUT_MS) || 30000,
+    // SQLite 文件位置，相对项目根目录
+    dbPath: process.env.ATTOM_DB_PATH?.trim() || 'data/attom.sqlite',
+  },
+  // CRESpan Demo 的门禁。两道开关：
+  // - enabled=false：整个 Demo 下线，页面只留一句「暂未开放」，没有输入框
+  // - accessCode：填了就要凭码进入；留空表示不设门禁（本地开发用）
+  crespan: {
+    enabled: process.env.CRESPAN_ENABLED?.trim() !== 'false',
+    accessCode: process.env.CRESPAN_ACCESS_CODE?.trim() || '',
+    // 通行 cookie 的有效期（天）
+    sessionDays: Number(process.env.CRESPAN_SESSION_DAYS) || 7,
+  },
 }
 
 const requiredMail = ['SMTP_HOST', 'SMTP_USER', 'SMTP_PASS', 'CONTACT_TO']
