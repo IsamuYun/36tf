@@ -3,13 +3,22 @@
 ========================================
 
 架构：
-  Nginx  ──┬── 静态文件 dist/          （首页 / about / contact）
-           └── /api/*  反向代理 → 127.0.0.1:3100  （Express，AI 聊天 + 联系表单）
+  Nginx  ──┬── 静态文件 dist/          （首页 / about / contact / property / crespan）
+           └── /api/*  反向代理 → 127.0.0.1:3100
+                       （Express：AI 聊天 + 联系表单 + ATTOM 房产查询 + CRESpan）
 
   前端是 SPA，路由由浏览器接管，Nginx 必须做 index.html 回退，
   否则直接访问 /about 会 404。
 
   API 密钥只存在于 VPS 上的 .env，不进代码仓库、不进前端产物。
+
+  两个独立页面（不套主站导航与页脚）：
+      /property   ATTOM 接口测试页，手动挑端点、填参数、看原始返回
+      /crespan    CRESpan Demo，用自然语言查邮编周边的仓库 / 餐馆 / 商业地产
+                  对外开放与否由访问码控制，见第 11 节
+
+  ATTOM 的每次调用都落到 data/attom.sqlite（Node 内置 node:sqlite，无原生依赖），
+  所以部署目录里的 data/ 需要可写，见第 2 步。
 
 
 ----------------------------------------
@@ -33,10 +42,13 @@
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y nginx git curl ufw
 
-# Node.js 22 LTS（本项目用到 fetch 与 Web Streams，最低需要 Node 20）
+# Node.js 22 LTS
+# 最低 22.5：ATTOM 查询用的是内置 node:sqlite（DatabaseSync），22.5 才有；
+# fetch 与 Web Streams 在 20 就有，但别再往低了装。
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
-node -v && npm -v          # 确认 v22.x
+node -v && npm -v          # 确认 v22.5 以上
+node -e "require('node:sqlite');console.log('node:sqlite OK')"   # 必须打印 OK
 
 # 防火墙
 sudo ufw allow OpenSSH
@@ -59,6 +71,14 @@ npm run build              # 产出 dist/
 
   说明：npm ci 比 npm install 更适合服务器，它严格按 lock 文件安装，
   不会自作主张升级依赖。
+
+ATTOM 的查询记录要写进 data/attom.sqlite，目录得归跑服务的那个用户：
+
+mkdir -p /var/www/36tf/data
+sudo chown -R ubuntu:ubuntu /var/www/36tf/data      # 换成 systemd 里的 User=
+
+  这个目录不在 git 里（.gitignore 已排除 data/），
+  首次启动会自动建库；WAL 模式会额外生成 -wal 与 -shm 两个文件，属正常。
 
 
 ----------------------------------------
@@ -83,6 +103,19 @@ nano .env
   CONTACT_TO=yun@36tech.info
   CONTACT_FROM=<发信地址，通常同 SMTP_USER>
 
+  # ATTOM 房产数据（/property 测试页、/crespan Demo 都用它）
+  ATTOM_API_KEY=<你的密钥>
+  # 下面两项一般不用改，保持默认即可
+  # ATTOM_BASE_URL=https://api.gateway.attomdata.com/propertyapi/v1.0.0
+  # ATTOM_DB_PATH=data/attom.sqlite
+  # ATTOM 网关在密集城区经常要十几秒，超时别设太短
+  # ATTOM_TIMEOUT_MS=30000
+
+  # CRESpan Demo 的门禁（详见第 11 节）
+  CRESPAN_ACCESS_CODE=<自己定一串长口令>   # 留空 = 谁都能用，线上请务必填
+  CRESPAN_ENABLED=true                     # 改 false = 整个 Demo 下线
+  CRESPAN_SESSION_DAYS=7                   # 输对码后免输入的天数
+
   # 生产环境收窄跨域来源
   CORS_ORIGINS=https://example.com,https://www.example.com
 
@@ -96,9 +129,11 @@ chmod 600 .env
 先手动跑一次确认没问题：
 
 npm start
-  # 应打印模型名、端点、脱敏后的密钥
+  # 应打印模型名、端点、脱敏后的密钥，末尾还有一行 CRESpan 的门禁状态：
+  #   CRESpan   需访问码 / 公开（未设 CRESPAN_ACCESS_CODE）/ 已下线
   # 另开一个终端： curl http://127.0.0.1:3100/api/health
-  # 期望 chat.configured 与 contact.configured 都是 true
+  # 期望 chat.configured、contact.configured、property.configured 都是 true，
+  #      crespan 里 configured=true、enabled=true、codeRequired=true
   # 确认后 Ctrl+C 停掉
 
 
@@ -171,12 +206,18 @@ sudo nano /etc/nginx/sites-available/36tf
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           proxy_set_header X-Forwarded-Proto $scheme;
 
-          # ★ 关键：AI 聊天是 SSE 流式输出。
+          # ★ 关键：AI 聊天与 CRESpan 都是 SSE 流式输出。
           #   不关缓冲的话 Nginx 会把整段回复攒完再一次性吐出，
-          #   前端的逐字效果会变成「卡很久 → 突然全部出现」。
+          #   前端的逐字效果会变成「卡很久 → 突然全部出现」；
+          #   CRESpan 更明显——房产卡片要等模型写完才一起冒出来。
           proxy_buffering off;
           proxy_cache off;
+          # CRESpan 一轮 = 意图解析 + ATTOM 检索 + 模型写回答，
+          # 慢的时候接近一分钟，这个超时别往下调。
           proxy_read_timeout 300s;
+
+          # ★ X-Forwarded-Proto 上面已经设了，别删：
+          #   CRESpan 的访问码 cookie 靠它判断要不要加 Secure 标记。
       }
 
       # ★ SPA 回退：/about 与 /contact 由前端路由接管，
@@ -224,8 +265,18 @@ sudo systemctl restart 36tf-api
   □ AI 顾问 Eva 能回话，且是逐字出现而不是一次性弹出
        （若是一次性弹出 → Nginx 的 proxy_buffering off 没生效）
   □ 联系表单提交后能收到邮件
-  □ 浏览器 DevTools 里搜 QWEN / SMTP，应该搜不到任何密钥
-  □ curl https://example.com/api/health 返回两个 configured: true
+  □ https://example.com/crespan  显示访问码门禁页（说明线上没忘记设码）
+  □ 输对码后能进，问「查一下 90210 周边 10 英里内的 10 家仓库」，
+       右侧房产卡片先出来，文字说明随后逐字出现
+  □ 换一个浏览器（或无痕窗口）直接打开 /crespan，应该仍要码
+  □ 点页头右上角的锁图标，回到门禁页
+  □ 浏览器 DevTools 里搜 QWEN / SMTP / ATTOM / 访问码本身，应该都搜不到
+       （cookie 里存的是 HMAC，不是访问码）
+  □ curl https://example.com/api/health 返回 chat / contact / property
+       三个 configured: true，crespan 里 enabled=true、codeRequired=true
+  □ curl -X POST https://example.com/api/crespan/chat -H 'content-type: application/json' \
+         -d '{"messages":[{"role":"user","content":"hi"}]}'
+       不带 cookie 应返回 401 locked，而不是真的开始查
 
 
 ----------------------------------------
@@ -267,7 +318,30 @@ AI 顾问回复不是逐字出现，而是等很久后一次性显示
 API 起不来
   → journalctl -u 36tf-api -n 50 看报错。
     最常见是 .env 路径不对（必须在 WorkingDirectory 下）
-    或 node 版本过低（需要 20+）。
+    或 node 版本过低（node:sqlite 需要 22.5+）。
+
+/crespan 一直停在门禁页，码明明是对的
+  → 大概率是 cookie 没写进来。检查 Nginx 的 /api/ 块有没有
+    proxy_set_header X-Forwarded-Proto $scheme；缺了它服务端以为是 http，
+    在 https 页面上发出的 cookie 会被浏览器丢掉。
+    也确认 .env 改完重启过 API——访问码是启动时读进内存的。
+
+刚才还能用，忽然被弹回门禁页
+  → 有人改了 CRESPAN_ACCESS_CODE 并重启。换码会让所有已发出的 cookie
+    立刻失效，这是设计如此（想收回访问权就换码）。
+
+/crespan 报「房产数据查询失败」或查得特别慢
+  → ATTOM 网关在密集城区算不完就回 504，属于上游限制。
+    服务端已经做了两件事：半径从 1→3→5→10 英里逐圈试探，凑够 10 条就停；
+    整圈被掐断时把圆拆成 6 个小圆分别查。
+    journalctl -u 36tf-api 里会打印每一圈的命中数，据此判断是上游慢还是真没数据。
+
+/crespan 返回 0 条但接口正常
+  → 是真没数据。ATTOM 的业态来自各县评估局，覆盖不均；
+    例如 92602（Irvine）十英里内就没有任何餐馆类登记。换个邮编即可。
+
+data/attom.sqlite 写不进去（日志里 SQLITE_CANTOPEN 或权限报错）
+  → data/ 目录属主不是 systemd 里的 User=。见第 2 步的 chown。
 
 
 ----------------------------------------
@@ -277,5 +351,55 @@ API 起不来
   · .env 权限 600，且已在 .gitignore 中排除，不要提交
   · Express 只监听 127.0.0.1:3100，不要对公网暴露，全部流量走 Nginx
   · 密钥泄露后立即到阿里云百炼控制台吊销并换新
+  · 线上一定要设 CRESPAN_ACCESS_CODE。留空等于把 Qwen 与 ATTOM 的额度
+    敞开给所有人——两家都是按调用计费的
+  · 访问码换一串长的，别用 demo2026 这种；换码即可收回全部访问权
+  · /property 测试页没有门禁，会直接消耗 ATTOM 额度。
+    不想让人用就在 Nginx 里挡掉：
+        location = /property { return 404; }
+  · data/attom.sqlite 存着完整的查询记录与返回报文，备份时按敏感数据对待；
+    库会一直涨，需要时停服务删掉重建即可（首次启动会自动建表）
   · 定期 sudo apt update && sudo apt upgrade
   · 建议关闭 SSH 密码登录，改用密钥
+
+
+----------------------------------------
+11. CRESpan Demo 的开关（日常操作）
+----------------------------------------
+
+三个变量都在 /var/www/36tf/.env，改完统一执行：
+
+    sudo systemctl restart 36tf-api
+
+  不用重新 npm run build——这三项只在服务端读。
+
+平时：对外要码
+    CRESPAN_ACCESS_CODE=<一串长口令>
+    CRESPAN_ENABLED=true
+  别人打开 /crespan 会看到「这是内部演示，请输入访问码」。
+  码发给想给看的人；输对一次后 7 天内免输（CRESPAN_SESSION_DAYS 可调）。
+
+想收回某些人的访问权：换码
+    CRESPAN_ACCESS_CODE=<新口令>
+  重启后所有已发出的 cookie 立刻失效，谁都得重新输码。
+  （cookie 里存的是「以访问码为密钥的 HMAC」，码一变就对不上；
+    反过来，重启和重新部署不会误伤已放行的人。）
+
+彻底关掉
+    CRESPAN_ENABLED=false
+  页面只剩 logo 加一句「Demo 暂未开放，如需演示请联系 36 Tech」，
+  连输入框都没有；/api/crespan/* 一律 503。
+  站点其余部分（首页、about、contact、/property）不受影响。
+
+自己演示完想当场锁上
+  页头右上角有个锁图标，点一下交还 cookie，回到要码的状态。
+  在客户或同事的电脑上演示完，顺手点一下。
+
+防爆破
+  同一 IP 十分钟内最多试 10 次访问码，超了返回 429。
+  日志里能看到来源 IP，必要时在 Nginx 或 ufw 层面封掉。
+
+查当前状态
+    curl -s http://127.0.0.1:3100/api/health | grep -o '"crespan":{[^}]*}'
+  或直接看启动日志：journalctl -u 36tf-api | grep CRESpan
+    CRESpan   需访问码 / 公开（未设 CRESPAN_ACCESS_CODE）/ 已下线

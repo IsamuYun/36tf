@@ -84,7 +84,7 @@ async function callAttom(endpoint, params) {
   return body
 }
 
-async function callWithRetry(endpoint, params) {
+export async function callWithRetry(endpoint, params) {
   let last
   for (let i = 0; i < ATTEMPTS; i++) {
     try {
