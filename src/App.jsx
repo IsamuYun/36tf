@@ -10,6 +10,8 @@ import ContactPage from './pages/ContactPage.jsx'
 import HomePageEn from './pages/en/HomePage.jsx'
 import PropertyPage from './pages/PropertyPage.jsx'
 import CrespanPage from './pages/CrespanPage.jsx'
+import RobotPage from './pages/RobotPage.jsx'
+import UspsTrackerPage from './pages/UspsTrackerPage.jsx'
 
 /**
  * 换页时回到顶部；带 #hash 时滚到对应锚点。
@@ -99,6 +101,10 @@ export default function App() {
         <Route path="/property" element={<PropertyPage />} />
         {/* CRESpan：自然语言查商业地产，同样独立于主站布局 */}
         <Route path="/crespan" element={<CrespanPage />} />
+        {/* Robot：聊天式房产问答，右侧卡片展示 ATTOM 数据；门禁与 CRESpan 共用 */}
+        <Route path="/robot" element={<RobotPage />} />
+        {/* USPS 包裹追踪：按单号查物流轨迹 */}
+        <Route path="/usps" element={<UspsTrackerPage />} />
         <Route
           path="/cn/*"
           element={<Site locale="cn" home={HomePage} tweaks={tweaks} setTweaks={setTweaks} />}

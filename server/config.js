@@ -43,6 +43,14 @@ export const config = {
     // SQLite 文件位置，相对项目根目录
     dbPath: process.env.ATTOM_DB_PATH?.trim() || 'data/attom.sqlite',
   },
+  // USPS 包裹追踪（apis.usps.com）。Consumer Key / Secret 即 OAuth 的 client_id / client_secret。
+  usps: {
+    consumerKey: process.env.USPS_CONSUMER_KEY?.trim(),
+    consumerSecret: process.env.USPS_CONSUMER_SECRET?.trim(),
+    // 测试环境用 https://apis-tem.usps.com
+    baseUrl: (process.env.USPS_BASE_URL?.trim() || 'https://apis.usps.com').replace(/\/+$/, ''),
+    timeoutMs: Number(process.env.USPS_TIMEOUT_MS) || 20000,
+  },
   // CRESpan Demo 的门禁。两道开关：
   // - enabled=false：整个 Demo 下线，页面只留一句「暂未开放」，没有输入框
   // - accessCode：填了就要凭码进入；留空表示不设门禁（本地开发用）

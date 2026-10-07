@@ -5,6 +5,8 @@ import chatRouter from './routes/chat.js'
 import contactRouter from './routes/contact.js'
 import propertyRouter from './routes/property.js'
 import crespanRouter from './routes/crespan.js'
+import robotRouter from './routes/robot.js'
+import uspsRouter from './routes/usps.js'
 
 const app = express()
 
@@ -24,6 +26,7 @@ app.get('/api/health', (req, res) => {
     chat: { configured: missing.length === 0, missing, model: config.qwen.model || null },
     contact: { configured: missingMailEnv().length === 0, missing: missingMailEnv() },
     property: { configured: Boolean(config.attom.apiKey) },
+    usps: { configured: Boolean(config.usps.consumerKey && config.usps.consumerSecret) },
     crespan: {
       configured: missing.length === 0 && Boolean(config.attom.apiKey),
       enabled: config.crespan.enabled,
@@ -36,6 +39,8 @@ app.use('/api/chat', chatRouter)
 app.use('/api/contact', contactRouter)
 app.use('/api/property', propertyRouter)
 app.use('/api/crespan', crespanRouter)
+app.use('/api/robot', robotRouter)
+app.use('/api/usps', uspsRouter)
 
 // 兜底错误处理，避免异常直接把进程带崩
 app.use((err, req, res, next) => {
@@ -60,6 +65,9 @@ app.listen(config.port, config.host, () => {
   }
   if (!config.attom.apiKey) {
     console.warn('  ⚠ 缺少 ATTOM_API_KEY，房产查询接口将返回 503')
+  }
+  if (!config.usps.consumerKey || !config.usps.consumerSecret) {
+    console.warn('  ⚠ 缺少 USPS_CONSUMER_KEY / USPS_CONSUMER_SECRET，包裹追踪接口将返回 503')
   }
   const gate = !config.crespan.enabled
     ? '已下线（CRESPAN_ENABLED=false）'

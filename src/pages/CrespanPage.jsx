@@ -212,7 +212,7 @@ function ResultsPanel({ searches, active, onPick }) {
  * 门禁页：Demo 下线时只剩一句说明，需要访问码时给一个输入框。
  * 这层只挡界面，真正拦人的是服务端——没有 cookie，/api/crespan/chat 一律 401。
  */
-function GatePage({ gate, onUnlocked }) {
+export function GatePage({ gate, onUnlocked, title = 'CRESpan' }) {
   const [code, setCode] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
@@ -243,8 +243,8 @@ function GatePage({ gate, onUnlocked }) {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-cloud px-6">
       <div className="w-full max-w-[380px] text-center">
-        <img src={logo} alt="CRESpan" width="64" height="64" className="mx-auto h-16 w-16 object-contain" />
-        <h1 className="mt-4 font-display text-[26px] font-bold tracking-tight">CRESpan</h1>
+        <img src={logo} alt={title} width="64" height="64" className="mx-auto h-16 w-16 object-contain" />
+        <h1 className="mt-4 font-display text-[26px] font-bold tracking-tight">{title}</h1>
 
         {offline ? (
           <>
