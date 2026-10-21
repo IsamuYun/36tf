@@ -41,13 +41,13 @@ export const CLIENTS = [
     name: 'JW Fire Block', 
     logo: jwFabric, 
     url: 'https://jm.36techfreedom.com', 
-    blurb: '【TBD: one-line summary】' 
+    blurb: 'A WooCommerce store for JW fire-blocking materials.' 
   },
   { 
     name: 'Raiden Antiques', 
     logo: raidenAntiques, 
     url: 'https://lei.36tech.info', 
-    blurb: '【TBD: one-line summary】' 
+    blurb: "Raiden Antiques' Shopify store." 
   },
   {
     name: 'CESASC',
@@ -70,7 +70,7 @@ export const CLIENTS = [
     name: 'Sindy Fish', 
     logo: sindyFish, 
     url: 'https://sindyfish.cloud', 
-    blurb: 'Mental health counseling practice in the CN. The site is a brochure with a booking form' 
+    blurb: 'A counseling practice in China. The site is a brochure page with a booking form.' 
   },
 ]
 
@@ -132,23 +132,23 @@ export const HERO_POSTERS = [
 export const PAINS = [
   {
     n: '01',
-    title: 'You tried ChatGPT. Nobody at work actually uses it.',
-    body: 'The tool got bought, the workflow never changed. Everyone still copies and pastes, then forgets. AI that is not wired into your systems is just one more open tab.',
+    title: 'ChatGPT stays in the browser',
+    body: 'The tool got bought, the workflow never changed. AI never reached the system: it lives in a browser tab, and whatever gets copied out is pasted once and filed away.',
   },
   {
     n: '02',
-    title: 'The data cannot leave the building.',
-    body: 'Customer lists, clinical records, quotes, contracts. Dropping them into a public model keeps the owner up at night. So AI gets to write emails and never touches the work that matters.',
+    title: 'The data cannot leave the building',
+    body: 'Customer lists, clinical records, quotes, contracts. Dropping them into a public model keeps the owner up at night. So AI gets to write emails and never touches the work that actually matters.',
   },
   {
     n: '03',
-    title: 'The demo was great. Nobody dares ship it.',
+    title: 'A demo that never ships',
     body: 'Impressive on stage, unreliable on real business: wrong answers, promises nobody approved. No hard limits, no human review, no fallback, and no one willing to own the result.',
   },
   {
     n: '04',
-    title: 'The monthly bill makes no sense.',
-    body: 'Model usage costs climb every month and nobody knows where the money goes, or which tasks a local model could handle for free. AI became a cost line with no output attached.',
+    title: 'A monthly bill nobody understands',
+    body: 'Model usage costs climb month after month and nobody knows how to control them. Nothing the AI produces is measured, so there is no way to judge the return.',
   },
 ]
 
@@ -434,7 +434,7 @@ export const UI = {
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     // Points at the other language's home page; each file writes its own.
-    lang: { label: '中文', href: '/cn', aria: '切换到中文' },
+    lang: { label: '中文', href: '/', aria: '切换到中文' },
   },
 
   hero: {
@@ -457,14 +457,15 @@ export const UI = {
   /* Home hero. Translated from the Chinese copy in docs/homepage-plan.txt §3;
      an array inside title becomes the letter-flip phrase rotator. */
   heroShowcase: {
-    eyebrow: 'We craft AI engines for the software you already run',
+    eyebrow: '',
     title: ['Craft your AI engine, and let your systems', ['write reports', 'draft proposals', 'analyze data', 'batch-produce images']],
     lead:
-      'An AI engine is the layer we fit into the systems you already use: a language model, a knowledge base, your business rules. Keep Medplum, Shopify or your ERP. Fit the engine, and the system starts doing the work. Cloud or on your own server.',
-    // Proof line: figures approved by the clinic (2026-10-20); use only these three
-    proof: ['Clinical report: 240 → 5 min', '90%+ drafts accepted', 'Records stayed in the clinic'],
-    cta: 'Book an AI engine audit',
-    posterHint: 'Engines we built recently',
+      'AI that does the work, not just the talking. Real AI productivity for the systems you already run.',
+    // Proof line, mirrors cn.js. Clinic figures (approved 2026-10-20) kept below for reuse.
+    proof: ['AI engine output: faster', 'sharper', 'steadier'],
+    //proof: ['Clinical report: 240 → 5 min', '90%+ drafts accepted', 'Records stayed in the clinic'],
+    cta: 'Book an audit',
+    posterHint: 'AI engines we built recently',
     dwellMs: 8000,
     period: '.',
     joiner: ', ',
@@ -509,10 +510,10 @@ export const UI = {
 
   pains: {
     num: '01',
-    title: 'Why is AI still not doing real work?',
-    // 这一节的四张卡自己就说清楚了，不再加副标题
+    title: 'Why has AI not turned into productivity?',
+    // The four cards say it; no subtitle needed
     closingLead: 'These are the same problem: ',
-    closingStrong: 'AI is stuck in a chat window, not wired into your systems and workflows.',
+    closingStrong: 'AI is still sitting in a chat window. Without an engine, it never becomes productivity.',
   },
 
   services: {
@@ -574,7 +575,7 @@ export const UI = {
   },
 
   footer: {
-    blurb: 'AI that does the work, not just the talking: engines for the systems you already run.',
+    blurb: 'AI that does the work, not just the talking. Real AI productivity for the systems you already run.',
     meta: [
       ['City', 'Irvine, CA'],
       ['Email', 'yun@36tech.info'],
@@ -639,12 +640,12 @@ export const CASE_CLINIC = {
   eyebrow: 'Case study · Mental health',
   title: ['One session report,', 'from 240 minutes to 5.'],
   lead: 'Twenty therapists at a mental health clinic draft their reports with a locally hosted LLM and a knowledge base built from their own best work. Patient records never leave the clinic. Every report is reviewed and signed by a therapist.',
-  client: { name: '[TBD: clinic name]', logo: clinicLogo, logoLabel: 'CLINIC LOGO', location: 'California, USA' },
+  client: { name: 'Lingxin Counseling Studio', logo: clinicLogo, logoLabel: 'CLINIC LOGO', location: 'Irvine, CA' },
   tags: ['Medplum', 'Qwen3 8B · on-premise', 'Custom knowledge base', 'FHIR records', 'Human sign-off'],
   stats: [
     { value: '240 → 5', unit: 'min', label: 'Time to produce one session report' },
     { value: '90%+', unit: '', label: 'AI drafts accepted by therapists' },
-    { value: '20', unit: '', label: 'Therapists on the system, data never leaves the clinic' },
+    { value: '20', unit: 'therapists', label: 'On the system, data never leaves the clinic' },
   ],
   challenge: {
     eyebrow: 'Before',
@@ -675,7 +676,8 @@ export const CASE_CLINIC = {
         body: 'From the first visit, notes, assessments and analysis live in Medplum. Nothing is scattered across personal documents or paper.',
       },
     ],
-    shotLabel: '[TBD: redacted screenshot of the system]',
+    shot: clinicShot,
+    shotLabel: 'AI-drafted report inside the Medplum record',
   },
   flow: {
     eyebrow: 'How a report gets made',
@@ -715,8 +717,8 @@ export const CASE_CLINIC = {
   },
   cta: {
     title: 'Is there a "four-hour report" in your business too?',
-    body: 'Repetitive, time-consuming, fixed-format work on data that cannot leave the building is exactly where on-premise AI fits. Start with an AI readiness audit and find out whether it is worth doing.',
-    primary: 'Book an AI readiness audit',
+    body: 'Repetitive, time-consuming, fixed-format work on data that cannot leave the building is exactly where on-premise AI fits. Start with an AI engine audit and find out whether it is worth doing.',
+    primary: 'Book an AI engine audit',
     secondary: 'See other work',
   },
 }
@@ -761,8 +763,7 @@ export const CASE_PMS = {
         body: 'At month end the system pulls rent collected, vacancies and maintenance spend into a draft report with commentary. The property manager reviews and sends.',
       },
     ],
-    shot: clinicShot,
-    shotLabel: 'AI-drafted report inside the Medplum record',
+    shotLabel: '[TBD: redacted screenshot]',
   },
   flow: {
     eyebrow: 'How a tenant enquiry is handled',

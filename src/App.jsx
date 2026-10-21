@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom'
 import { ContentProvider, useContent } from './content/index.jsx'
 import Nav from './components/Nav.jsx'
 import Footer from './components/Footer.jsx'
@@ -69,6 +69,13 @@ function DocumentMeta() {
  * （HomePage.jsx / en/HomePage.jsx），这样以后改英文版的
  * 板块顺序或增删板块，不会影响中文版。
  */
+/** /cn/about → /about，保留 hash 与查询串，用 replace 不留历史记录 */
+function StripCnPrefix() {
+  const { pathname, search, hash } = useLocation()
+  const rest = pathname.replace(/^\/cn(?=\/|$)/, '') || '/'
+  return <Navigate to={`${rest}${search}${hash}`} replace />
+}
+
 function Site({ locale, home: Home, tweaks, setTweaks }) {
   return (
     <ContentProvider locale={locale}>
@@ -109,16 +116,18 @@ export default function App() {
         <Route path="/robot" element={<RobotPage />} />
         {/* USPS 包裹追踪：按单号查物流轨迹 */}
         <Route path="/usps" element={<UspsTrackerPage />} />
+        {/* 旧地址兼容：/cn/... 一律去掉前缀跳到根路径（中文现在是默认语言） */}
+        <Route path="/cn/*" element={<StripCnPrefix />} />
         <Route
-          path="/cn/*"
-          element={<Site locale="cn" home={HomePage} tweaks={tweaks} setTweaks={setTweaks} />}
-        />
-        {/* 兜底的 /* 必须留在最后：英文是默认语言，占根路径 */}
-        <Route
-          path="/*"
+          path="/en/*"
           element={
             <Site locale="en" home={HomePageEn} tweaks={tweaks} setTweaks={setTweaks} />
           }
+        />
+        {/* 兜底的 /* 必须留在最后：中文是默认语言，占根路径 */}
+        <Route
+          path="/*"
+          element={<Site locale="cn" home={HomePage} tweaks={tweaks} setTweaks={setTweaks} />}
         />
       </Routes>
     </BrowserRouter>
