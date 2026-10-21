@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { Button, Arrow } from './ui.jsx'
 import { PhraseRotator } from './HeroPhrase.jsx'
-import { useContent } from '../content/index.jsx'
+import { Link } from 'react-router-dom'
+import { useContent, useHref } from '../content/index.jsx'
 
 const THUMB_W = 96
-const THUMB_H = 72
+const THUMB_H = 54
 const FLIGHT_MS = 640 // 海报从缩略图飞到舞台的时长
 
 /**
@@ -14,13 +15,13 @@ const FLIGHT_MS = 640 // 海报从缩略图飞到舞台的时长
  * 两种语言各写各的，改一边不影响另一边。
  *
  * 版式是一张 24×10 的网格（lg 起），格线用点线画出：
- * 1920 下每格 80×60，与缩略图的 96×72 同为 4:3。
+ * 1920 下每格 80×60；缩略图 96×54，与海报同为 16:9。
  * 通栏深色底（ink），左右各 12 格、左右对称：文案与海报各自在自己那半居中。
  * 左：第 1–12 格，白字 + 一个琥珀色 CTA（2px 圆角）。
  * 标题里的数组项会变成逐字翻起的短句轮播，见 PhraseRotator。
  * 右：第 13–24 格，四张网站海报轮播，每张停留 dwellMs（默认 8 秒）。
- * 海报本身就是版面，不能裁：容器按 4:3 锁比例（与原图一致），
- * 高度吃满可用空间、宽度自适应，圆角与投影才会贴着图片边缘而不是空框。
+ * 海报是宽幅截图，不能裁：容器按 16:9 锁比例，宽度吃满自己那半、高度随之推出并垂直居中，
+ * 圆角与投影才会贴着图片边缘而不是空框。
  * 缩略图按钮 96×72 浮在整个 section 的中下方（lg 以上），绝对定位、脱离文档流——
  * 左右两栏都不必为它让出高度，海报因此能吃满 600px。
  *
@@ -32,6 +33,7 @@ const FLIGHT_MS = 640 // 海报从缩略图飞到舞台的时长
 export default function HeroShowcase() {
   const { HERO_POSTERS, UI } = useContent()
   const t = UI.heroShowcase
+  const href = useHref()
   /* active 与 prev 必须是同一个 state：分成两个 setState 时，
      prev 的更新会晚一次渲染落地，飞行的那一帧底下就是空白而不是上一张。
      prev = 上一张，动画期间垫在底下，新的一张落定后正好把它盖住。 */
@@ -115,7 +117,7 @@ export default function HeroShowcase() {
       <div className="relative grid h-full lg:grid-cols-[repeat(24,minmax(0,1fr))] lg:grid-rows-[repeat(10,minmax(0,1fr))]">
         {/* 左：文案，占第 1–12 列、全部 10 行。
             lg 起在自己这半里居中，宽度取 704px——与海报同宽（600 高的舞台去掉
-            上下 36px 内边距，按 4:3 推出来就是 704×528），两半的内缩才一致。
+            上下 36px 内边距，按旧的 4:3 推出来是 704），两半的内缩才一致。
             文字本身仍左对齐，居中排文案会难读。 */}
         <div className="flex items-center px-6 py-16 md:px-10 lg:[grid-area:1/1/11/13] lg:justify-center lg:px-10 lg:py-0">
           <div className="w-full max-w-[620px] lg:max-w-[704px]">
@@ -143,15 +145,29 @@ export default function HeroShowcase() {
             </h1>
 
             {/* 块宽 704 是为了和海报对齐，正文行长另外收窄——一行 90 字符读不下去 */}
-            <p className="mt-6 max-w-[560px] text-[16px] leading-[1.75] text-white/72 md:text-[17px]">
+            <p className="mt-6 max-w-[560px] text-[18px] font-bold leading-[1.75] text-white/80 md:text-[19px]">
               {t.lead}
             </p>
+
+            {/* 证据行：三个已授权的数字，琥珀色只给数字本身所在的短句 */}
+            {t.proof && (
+              <ul className="mt-5 flex max-w-[560px] flex-wrap gap-x-5 gap-y-1.5 font-mono text-[16px] tracking-[0.04em] text-white">
+                {t.proof.map((item, i) => (
+                  <li
+                    key={item}
+                    className={`whitespace-nowrap ${i === 0 ? 'text-amber' : 'border-l border-white/80 pl-5'}`}
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            )}
 
             {/* !rounded 覆盖 Button 基础样式里的 rounded-full：
                 两者都是 border-radius，胜负取决于 Tailwind 的生成顺序而非
                 class 字符串顺序，只能靠 important 拿下 */}
             <div className="mt-9">
-              <Button as="a" href="#diagnose" variant="amber" className="group !rounded-[2px]">
+              <Button as={Link} to={href('/contact')} variant="amber" className="group !rounded-[2px]">
                 {t.cta}
                 <Arrow className="group-hover:translate-x-1" />
               </Button>
@@ -160,31 +176,40 @@ export default function HeroShowcase() {
         </div>
 
         {/* 右：海报舞台。里层的 absolute inset-0 不能省——
-            它给海报框一个确定的高度，h-full 才解析得出来，
-            4:3 的宽度也才由高度推出来，而不是反过来把版面撑破。 */}
+            它给舞台一个确定的区域，16:9 的海报按宽度撑满、高度推出后在其中垂直居中，
+            不会反过来把版面撑破。 */}
         <div className="relative min-h-[420px] lg:[grid-area:1/13/11/25] lg:min-h-0">
-          <div className="absolute inset-0 flex justify-center px-6 py-8 md:px-10 lg:py-9">
-            <div ref={stageRef} className="relative h-full max-w-full [aspect-ratio:4/3]">
+          <div className="absolute inset-0 flex items-center justify-center px-6 py-8 md:px-10 lg:py-9">
+            <div ref={stageRef} className="relative w-full max-h-full [aspect-ratio:16/9]">
               {HERO_POSTERS.map((p, i) => {
                 // 只留当前和上一张可见：上一张在动画期间垫底，落定后被完全盖住
                 const visible = i === active || i === prev
+                /* 海报外面包一层链接到案例页。FLIP 的 ref 与变换都落在链接上，
+                   图片只管填满；非当前张 tabIndex=-1，键盘不会 Tab 到看不见的链接。 */
                 return (
-                  <img
+                  <Link
                     key={p.src}
                     ref={(el) => {
                       posterRefs.current[i] = el
                     }}
-                    src={p.src}
-                    alt={p.alt}
-                    width="1024"
-                    height="768"
-                    loading={i === 0 ? 'eager' : 'lazy'}
+                    to={href(p.to)}
+                    aria-label={p.label}
                     aria-hidden={i !== active}
-                    className={`absolute inset-0 h-full w-full rounded-2xl object-cover ring-1 ring-white/10 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.75)] ${
+                    tabIndex={i === active ? 0 : -1}
+                    className={`absolute inset-0 block overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.75)] ${
                       visible ? 'opacity-100' : 'opacity-0'
                     } ${i === active ? 'z-20' : i === prev ? 'z-10' : 'z-0'}`}
                     style={reduced ? undefined : { willChange: 'transform' }}
-                  />
+                  >
+                    <img
+                      src={p.src}
+                      alt={p.alt}
+                      width="1600"
+                      height="900"
+                      loading={i === 0 ? 'eager' : 'lazy'}
+                      className="h-full w-full object-cover"
+                    />
+                  </Link>
                 )
               })}
             </div>
@@ -232,7 +257,7 @@ export default function HeroShowcase() {
                 width={THUMB_W}
                 height={THUMB_H}
                 loading="lazy"
-                className="block h-[72px] w-[96px] object-cover"
+                className="block h-[54px] w-[96px] object-cover"
               />
             </button>
           )

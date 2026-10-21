@@ -11,7 +11,7 @@ export default function Faq() {
     <Band>
       <div className="mx-auto max-w-[820px]">
         <Reveal>
-          <SectionHead num={UI.faq.num} title={UI.faq.title} />
+          <SectionHead title={UI.faq.title} />
         </Reveal>
 
         {FAQS.map((f, i) => {

@@ -1,15 +1,12 @@
 import HeroShowcase from '../../components/HeroShowcase.jsx'
-import TrustBar from '../../components/TrustBar.jsx'
 import WorkInBar from '../../components/WorkInBar.jsx'
 import ChatConsult from '../../components/ChatConsult.jsx'
 import Pains from '../../components/Pains.jsx'
 import Services from '../../components/Services.jsx'
-import Paths from '../../components/Paths.jsx'
 import WhyUs from '../../components/WhyUs.jsx'
 import Process from '../../components/Process.jsx'
 import Cases from '../../components/Cases.jsx'
 import Faq from '../../components/Faq.jsx'
-import CtaForm from '../../components/CtaForm.jsx'
 
 /**
  * 英文首页。这是一个独立文件：调整英文版的板块顺序、增删板块，
@@ -25,17 +22,14 @@ export default function HomePage() {
       <HeroShowcase />
       <WorkInBar />
       <Pains />
-      <TrustBar />
       
       <ChatConsult />
       
       <Services />
-      <Paths />
       <WhyUs />
       <Process />
       <Cases />
       <Faq />
-      <CtaForm />
     </>
   )
 }

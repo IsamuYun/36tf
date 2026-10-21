@@ -5,7 +5,9 @@ export default function Footer() {
   const { BRAND, FOOTER_COLUMNS, UI } = useContent()
   const href = useHref()
   return (
-    <footer className="wrap pb-14 pt-20 md:pt-24">
+    <footer className="border-t border-ink/[0.1]">
+      {/* 全宽 1px 分隔线与上方区块分开；内层仍用 .wrap 定宽 */}
+      <div className="wrap pb-14 pt-20 md:pt-24">
       <div className="grid gap-12 lg:grid-cols-[1.3fr_2fr]">
         {/* 品牌区 */}
         <div>
@@ -73,6 +75,7 @@ export default function Footer() {
             {UI.footer.terms}
           </a>
         </div>
+      </div>
       </div>
     </footer>
   )

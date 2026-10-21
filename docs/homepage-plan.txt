@@ -1,0 +1,187 @@
+========================================
+首页改版 · 一句话主旨与 Hero 文案设计
+========================================
+日期：2026-10-20
+性质：文案设计稿。定稿后改 src/content/cn.js、en.js 的 UI.heroShowcase、
+      HERO_POSTERS、DOMAINS、META，组件改动见第六节。
+上位文档：docs/brainstroms.txt（定位讨论）。本文件的口号以本文件为准。
+工作顺序：中文先定稿，英文再翻译并润色，不再两边各写各的。
+
+
+----------------------------------------
+一、定位一句话（已定）
+----------------------------------------
+
+  打造你的 AI 核心
+  Craft your AI Engine
+
+角度：给已经在用的软件或平台接上一层 AI，让它多干活，而不是换系统。
+「AI 核心」就是这一层：大模型 + 知识库 + 业务规则，装进现有系统里。
+证据：心理诊所报告助手（Medplum + Qwen3 8B）、电商 AI 综合平台、CRESpan、Eva，
+      全是「给现有系统打造一颗 AI 核心」。
+
+「AI 核心」全站统一解释（首次出现用这一句）：
+  AI 核心，是接进你现有系统的那一层：大模型、知识库、业务规则。
+  系统不用换，核心装进去，它就会干活。
+
+副句（配合主旨使用，放 Hero 导语、页脚、名片第二行）：
+  · 系统不用换，装上就会干活。
+  · 你的系统，一颗会思考的核心。
+  · 不换系统，只加核心。
+
+四字记忆点（替换「跑得快 · 找得到 · 答得上 · 算得清」，用于页脚、服务总览）：
+
+  接得上 · 跑得稳 · 管得住 · 算得清
+
+  接得上 → 核心接进 Medplum、Shopify、ERP、CRM，不推倒重来
+  跑得稳 → 云端 / 本地模型按任务分流，自动降级
+  管得住 → 数据不出门、人工审阅、红线可追溯
+  算得清 → 耗时、采纳率、成本都有数
+
+导航栏小标语（UI.nav.tagline，现为「中文沟通 · 海外标准」）：
+  打造你的 AI 核心
+
+----------------------------------------
+二、Hero 区 · 中文版
+----------------------------------------
+
+字段与 UI.heroShowcase 一一对应。
+
+eyebrow
+  为现有系统打造 AI 核心的技术团队
+
+title
+  第一行固定，第二行是 PhraseRotator 轮播数组。
+  轮播短句每句不超过 6 字、不带标点，句末句号由组件加。
+
+  方案 A（主推，主旨直接进标题）：
+  ['打造你的 AI 核心，让现有系统', ['写报告', '出方案', '分析数据', '批量出图']]
+  读出来：打造你的 AI 核心，让现有系统写报告。/ 出方案。/ 分析数据。/ 批量出图。
+  对应案例：写报告 → 诊所；出方案 → 诊所报告起草 / 电商选品建议；
+            分析数据 → 电商趋势分析、CRESpan；批量出图 → 电商产品图批处理。
+
+  方案 B（主旨单独成行，轮播讲结果）：
+  ['打造你的 AI 核心。', '系统不用换，就能', ['写报告', '出方案', '分析数据', '批量出图']]
+  三行，首屏更高，但主旨更醒目。组件现支持任意行数。
+
+lead（不超过 70 字）
+  AI 核心，是接进你现有系统的那一层：大模型、知识库、业务规则。
+  Medplum、Shopify、ERP 不用换，核心装进去，系统就会干活。
+  云端或本地部署都行。
+
+proof（新增字段，放 lead 下方、CTA 上方，小字一行）
+  一份咨询报告 240 分钟 → 5 分钟 · 咨询师采纳率 90%+ · 数据全程不出诊所
+
+cta
+  预约 AI 核心诊断
+
+  说明：入口产品统一叫「AI 核心诊断」，替换 brainstroms.txt 里的「AI 落地诊断」。
+  诊断回答的问题就是：你的系统值不值得装核心、装在哪一层、云端还是本地。
+
+posterHint
+  近期打造的 AI 核心
+
+右侧轮播（HERO_POSTERS 改为四项，截图到位前用 Placeholder）：
+
+  1. 心理诊所 · 报告核心
+     alt：Medplum 病历里 AI 生成的报告初稿，待咨询师审阅
+     链接：/cn/cases/clinic（已有）
+  2. 电商公司 · 运营核心
+     alt：一块看板：TikTok 与 Instagram 趋势、选品建议、批量处理中的产品图、订单与包裹状态
+     链接：/cn/cases/ecommerce（待建）
+  3. CRESpan · 商业地产检索核心
+     alt：一句话提问，左侧列出邮编范围内的物业卡片
+     链接：/cn/cases/crespan（待建）
+  4. Eva · 站内顾问核心
+     alt：站内顾问对话，回答带服务范围边界
+     链接：/cn/cases/eva（待建）
+
+  缩略图按钮 label 用案例名。海报可点击，跳对应案例页。
+
+----------------------------------------
+三、Hero 区 · 英文版（翻译稿，中文定稿后再润色）
+----------------------------------------
+
+英文现版是第一人称、单人工作室口吻（"one person accountable"）。
+翻译时先按中文的「我们」译，口吻是否改回第一人称见第七节。
+
+eyebrow
+  WE CRAFT AI ENGINES FOR THE SOFTWARE YOU ALREADY RUN
+
+title
+  方案 A：['Craft your AI engine, and let your systems', ['write reports', 'draft proposals', 'analyze data', 'batch-produce images']]
+  方案 B：['Craft your AI Engine.', 'Keep your systems, and let them', ['write reports', 'draft proposals', 'analyze data', 'batch-produce images']]
+
+lead
+  An AI engine is the layer we fit into the systems you already use:
+  a language model, a knowledge base, your business rules.
+  Keep Medplum, Shopify or your ERP. Fit the engine, and the system starts doing the work.
+  Cloud or on your own server.
+
+proof
+  One clinical report: 240 min → 5 min · 90%+ of drafts accepted · records never left the clinic
+
+cta
+  Book an AI engine audit
+
+posterHint
+  Engines we built recently
+
+右侧轮播与中文版同四张图，alt 与链接各写英文。
+
+----------------------------------------
+四、META
+----------------------------------------
+
+中文
+  title        打造你的 AI 核心 | 36 Tech
+  description  为你已经在用的系统打造 AI 核心：Medplum、Shopify、ERP、CRM 不用换。
+               大模型、知识库、业务规则接进去，云端或本地部署，数据可以不出门。
+               先做 AI 核心诊断，再决定值不值得。
+
+英文
+  title        Craft your AI Engine | 36 Tech
+  description  We fit an AI engine into the software you already run: language model,
+               knowledge base and business rules, cloud or on-premise.
+               One clinic cut report time from 240 minutes to 5. Start with an AI engine audit.
+
+
+----------------------------------------
+五、写作规则（沿用 docs/design/copy/00-文案总纲.txt）
+----------------------------------------
+
+  · 「AI 核心」首次出现用第一节的统一解释；不写成「AI 引擎」「AI 中台」「智能中枢」
+  · 不用黑话：赋能、抓手、闭环、打法、心智、护城河
+  · 不用最高级：领先、一流、颠覆
+  · 数字只用已授权的三个：240 → 5、90%+、20 位
+  · 「本地部署，数据不出机构」不写成「符合 HIPAA」
+  · 中文单句不超过 40 字
+  · 轮播短句不超过 6 字且不带标点：PhraseRotator 逐字翻起，长了会断行
+
+
+----------------------------------------
+六、落地时要改的文件
+----------------------------------------
+
+  src/content/cn.js、src/content/en.js
+    UI.heroShowcase、HERO_POSTERS、DOMAINS、META、UI.nav.tagline
+
+  src/components/HeroShowcase.jsx
+    lead 下方加一行 proof；海报改为可点击跳案例页
+
+  src/assets/hero/
+    三张案例截图到位前用 Placeholder（src/components/ui.jsx）
+
+  server/prompt.js
+    Eva 的自我介绍与服务范围同步改，否则站上的 AI 讲的还是旧定位
+
+
+----------------------------------------
+七、待确认
+----------------------------------------
+
+  · 标题用方案 A（主旨进标题）还是方案 B（主旨单独成行）。
+  · 电商平台案例的客户是否同意署名；数字（选品周期、每周图片数、工时对比）待拿。
+  · 英文版是否改回第一人称。中文用「我们」，英文现版用「I」，翻译时要定一个。
+  · 「AI Engine」在英文里是否保留大写 E（口号里大写，正文里小写 engine）。
+  · 入口产品改名「AI 核心诊断」后，brainstroms.txt 第五节与 CtaForm 文案要同步。

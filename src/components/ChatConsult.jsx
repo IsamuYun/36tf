@@ -131,9 +131,8 @@ export default function ChatConsult() {
   const notConfigured = error?.code === 'not_configured'
 
   return (
-    <Band>
+    <Band className="!py-4">
       <Reveal>
-        {/* 不给编号：01–07 是既有的内容序列，这里是插入的交互模块，编号会打乱那条线 */}
         <SectionHead title={t.title} zh={t.sub} />
       </Reveal>
 

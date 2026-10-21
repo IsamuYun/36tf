@@ -1,13 +1,15 @@
 import { Reveal, SectionHead, Button, Arrow, RingMotif } from './ui.jsx'
-import { useContent } from '../content/index.jsx'
+import { Link } from 'react-router-dom'
+import { useContent, useHref } from '../content/index.jsx'
 import Band from './Band.jsx'
 
 export default function Paths() {
   const { PATHS, UI } = useContent()
+  const href = useHref()
   return (
     <Band>
       <Reveal>
-        <SectionHead num={UI.paths.num} title={UI.paths.title} align="center" />
+        <SectionHead title={UI.paths.title} align="center" />
       </Reveal>
 
       <div className="grid gap-5 md:grid-cols-2">
@@ -53,8 +55,8 @@ export default function Paths() {
 
                 <div className="mt-9">
                   <Button
-                    as="a"
-                    href="#diagnose"
+                    as={Link}
+                    to={href('/contact')}
                     variant={i === 0 ? 'ghost' : 'ghostLight'}
                     className="group/btn"
                   >

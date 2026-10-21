@@ -7,6 +7,8 @@ import Tweaks from './components/Tweaks.jsx'
 import HomePage from './pages/HomePage.jsx'
 import AboutPage from './pages/AboutPage.jsx'
 import ContactPage from './pages/ContactPage.jsx'
+import CaseClinicPage from './pages/CaseClinicPage.jsx'
+import CasePmsPage from './pages/CasePmsPage.jsx'
 import HomePageEn from './pages/en/HomePage.jsx'
 import PropertyPage from './pages/PropertyPage.jsx'
 import CrespanPage from './pages/CrespanPage.jsx'
@@ -77,6 +79,8 @@ function Site({ locale, home: Home, tweaks, setTweaks }) {
           <Route index element={<Home tweaks={tweaks} />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route path="cases/clinic" element={<CaseClinicPage />} />
+          <Route path="cases/pms" element={<CasePmsPage />} />
           {/* 未知路径退回本语言首页，避免原型阶段出现空白页 */}
           <Route path="*" element={<Home tweaks={tweaks} />} />
         </Routes>

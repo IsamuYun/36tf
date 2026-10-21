@@ -9,18 +9,8 @@ import Band from './Band.jsx'
  * 卡片外留一圈浅色沟槽，里面是白底圆角卡；卡内 mono 小标签 + 大标题 + 灰正文；
  * 悬停时整块翻成品牌蓝、文字转白。
  *
- * 四张卡 2×2，格与格之间靠 border 分隔，交点处补圆点，和框架四角的圆点同一套语言。
+ * 四张卡 2×2，格与格之间只靠 1px 的 border 分隔。
  */
-
-/** 分隔线交点上的小圆点，只在双列布局（sm 以上）出现 */
-function Dot({ className }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`pointer-events-none absolute hidden h-2 w-2 rounded-full border border-ink/25 bg-cloud sm:block ${className}`}
-    />
-  )
-}
 
 export default function Pains() {
   const { PAINS, UI } = useContent()
@@ -30,7 +20,6 @@ export default function Pains() {
     <>
       <Band className="!py-4">
         <div className="flex items-baseline gap-4">
-          <span className="eyebrow text-fox">{t.num}</span>
           <h2 className="font-display text-[26px] font-bold leading-tight text-ink md:text-[34px]">
             {t.title}
           </h2>
@@ -53,9 +42,6 @@ export default function Pains() {
               <div className="h-full bg-cloud p-2">
                 <article className="group flex h-full flex-col gap-6 rounded-lg bg-white px-6 py-12 transition-colors duration-300 ease-[var(--ease-brand)] hover:bg-fox md:px-10 md:py-14 xl:p-16">
                   <div className="flex flex-col gap-2">
-                    <span className="eyebrow text-fox transition-colors duration-300 group-hover:text-white/70">
-                      {p.n}
-                    </span>
                     <h3 className="font-display text-[24px] font-bold leading-[1.25] tracking-tight transition-colors duration-300 group-hover:text-white md:text-[30px]">
                       {p.title}
                     </h3>
@@ -68,12 +54,6 @@ export default function Pains() {
             </Reveal>
           ))}
 
-          {/* 分隔线交点：上下边中点、左右边中点、以及正中的十字 */}
-          <Dot className="-top-1 left-1/2 -ml-1" />
-          <Dot className="-bottom-1 left-1/2 -ml-1" />
-          <Dot className="left-1/2 top-1/2 -ml-1 -mt-1" />
-          <Dot className="-left-1 top-1/2 -mt-1" />
-          <Dot className="-right-1 top-1/2 -mt-1" />
         </div>
       </Band>
 

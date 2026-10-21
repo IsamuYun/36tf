@@ -11,10 +11,12 @@ import seren from '../assets/trust-bar/seren-logo.png'
 import boxOfFun from '../assets/trust-bar/box-of-fun-logo.png'
 import sindyFish from '../assets/trust-bar/sindy-fish-logo.png'
 import chest from '../assets/trust-bar/chest-logo.png'
-import heroPoster1 from '../assets/hero/hero-01.jpg'
-import heroPoster2 from '../assets/hero/hero-02.jpg'
-import heroPoster3 from '../assets/hero/hero-03.jpg'
-import heroPoster4 from '../assets/hero/hero-04.jpg'
+import posterClinic from '../assets/hero/case-01.png'
+import posterEcommerce from '../assets/hero/case-02.jpg'
+import posterCrespan from '../assets/hero/case-03.jpg'
+import posterEva from '../assets/hero/case-04.png'
+import clinicLogo from '../assets/cases/clinic/pms-logo.jpg'
+import clinicShot from '../assets/cases/clinic/medplum-01.png'
 import shopifyLogo from '../assets/work-in/shopify-logo.png'
 import wooCommerceLogo from '../assets/work-in/woo-commerce-logo.png'
 import drupalLogo from '../assets/work-in/drupal-logo.png'
@@ -81,7 +83,7 @@ export const WORK_IN = [
 ]
 
 // 四个能力域 —— 全站信息架构的骨架，Hero 主标题与服务分组共用同一套表述
-export const DOMAINS = ['打开的快', '客户找得到', '真AI智能客服', '流量看得清']
+export const DOMAINS = ['接得上', '跑得稳', '管得住', '算得清']
 
 /* lines 的每一项可以是字符串，也可以是字符串数组。
    数组表示「短句组」：每句独立 nowrap（中文没有词边界，不控制会从句中断行），
@@ -97,119 +99,130 @@ export const HERO_VARIANTS = [
   { id: 'c', label: '备选 C', lines: ['别让一个跑不动的网站，', '拖累你的海外生意。'] },
 ]
 
-/* 首页 Hero 右侧轮播的四张网站海报，与英文版同一组图。
-   顺序即展示顺序；label 用作缩略图按钮的无障碍名称。
-   都是设计稿本身，alt 描述画面，不声称是谁的项目。 */
+/* 首页 Hero 右侧轮播：四个 AI 核心案例，与英文版同一组图。
+   图片在 src/assets/hero/case-0*.{png,jpg}，顺序 01–04 对应下面四项。
+   顺序即展示顺序；label 用作缩略图按钮的无障碍名称；to 为案例页路径（不带语言前缀）。
+   文案见 docs/homepage-plan.txt 第二节。 */
 export const HERO_POSTERS = [
   {
-    src: heroPoster1,
-    label: '阻燃面料电商站',
-    alt: '阻燃面料供应商的首页设计：超大「Fabric」字样压在一摞彩色面料上',
+    src: posterClinic,
+    label: '心理诊所 · 报告核心',
+    alt: 'Medplum 病历里 AI 生成的报告初稿，待咨询师审阅',
+    to: '/cases/clinic',
   },
   {
-    src: heroPoster2,
-    label: '旅游目的地站点',
-    alt: '旅游站点设计：阿尔卑斯湖景、超大「Travel」字样，下方一排目的地卡片',
+    src: posterEcommerce,
+    label: '电商公司 · 运营核心',
+    alt: '一块看板：TikTok 与 Instagram 趋势、选品建议、批量处理中的产品图、订单与包裹状态',
+    to: '/cases/ecommerce',
   },
   {
-    src: heroPoster3,
-    label: 'Web 3D 落地页',
-    alt: '沉浸式 Web 3D 服务的落地页设计：左侧插画面板，右侧五张价值点卡片',
+    src: posterCrespan,
+    label: 'CRESpan · 商业地产检索核心',
+    alt: '一句话提问，左侧列出邮编范围内的物业卡片',
+    to: '/cases/crespan',
   },
   {
-    src: heroPoster4,
-    label: '心理咨询站点',
-    alt: '心理咨询机构的三段式版面设计：静谧海景配图与「咨询如何进行」的说明网格',
+    src: posterEva,
+    label: 'Eva · 站内顾问核心',
+    alt: '站内顾问对话，回答带服务范围边界',
+    to: '/cases/eva',
   },
 ]
 
 export const PAINS = [
   {
     n: '01',
-    title: '当初做站的人不见了。',
-    body: '没有文档，没有交接，唯一搞得懂这套东西的人不再回消息。现在你哪儿都不敢动。',
+    title: 'ChatGPT仅在浏览器里',
+    body: '工具买了，流程没变。AI 没有接进系统，只停留在浏览器，复制粘贴后就被丢存档了',
   },
   {
     n: '02',
-    title: '一份迁移报价把你劝退了。',
-    body: '有人告诉你换平台就等于丢掉排名、一切从头再来。这通常说明对方不会做，而不是这件事本来就该如此。',
+    title: '数据不敢外传',
+    body: '客户名单、病历、报价单、合同，丢进公开模型，老板睡不着。于是 AI 只能用来写写邮件，无法处理真正有价值的业务',
   },
   {
     n: '03',
-    title: '东西全在服务商手里。',
-    body: '主机、域名、代码仓库、统计后台——全挂在他们的账号下。想换人就等于从零开始，他们也清楚这一点。',
+    title: '做了个 Demo，却不能上线',
+    body: '演示时很惊艳，接到真实业务上就乱答、乱承诺。没有红线、没有人工审阅、没有回退，没人敢对结果负责',
   },
   {
     n: '04',
-    title: '没有人对它负责。',
-    body: '不是故意不管。只是没有任何人的职责是去发现插件坏了、证书过期了、订单悄悄进不来了。',
+    title: '每月账单看不懂',
+    body: '模型调用费一个月比一个月高，没人知道如何控制成本，AI 生成的内容也没有被量化，无法评估 ROI',
   },
 ]
 
 export const SERVICE_GROUPS = [
   {
-    domain: '打开的快',
-    note: '性能、稳定性、可维护性',
+    domain: '接得上',
+    note: '接进现有系统，不推倒重来',
     items: [
       {
         no: '01',
-        zh: '电商站点建设与治理',
-        en: 'E-commerce Build & Cleanup',
-        body: '从零搭建能转化的电商站，或接手一个被改乱的站做彻底治理。',
+        zh: 'AI 核心诊断',
+        en: 'AI Engine Audit',
+        body: '两周内出书面报告：哪些环节值得接 AI、接在哪一层、云端还是本地、成本区间。',
       },
       {
         no: '02',
-        zh: '企业级平台迁移',
-        en: 'Enterprise Platform Migration',
-        body: '换平台不丢 SEO 权重、不丢历史数据、不停摆。',
+        zh: 'AI 工作流搭建',
+        en: 'AI Workflow Build',
+        body: '把大模型接进 Medplum、Shopify、ERP、CRM，交付一条在跑的流程，不是一个演示。',
       },
       {
         no: '03',
-        zh: '网站现代化改造',
-        en: 'Website Modernization',
-        body: '不推倒重来，把老站的性能、架构与可维护性逐步拉回正轨。',
+        zh: '站点与系统基础',
+        en: 'Site & System Foundations',
+        body: '建站、迁移、现代化改造、SEO/GEO。AI 要落地，先得有一个接得上的系统。',
       },
     ],
   },
   {
-    domain: '真AI智能客服',
-    note: '多语言、多时区自动应答',
+    domain: '跑得稳',
+    note: '多模型分流，稳定可维护',
     items: [
       {
         no: '04',
-        zh: 'AI 客服',
-        en: 'AI Customer Service',
-        body: '多语言、7×24 自动应答，让时差不再是丢单的理由。',
+        zh: '对话式业务助手',
+        en: 'Conversational Assistants',
+        body: '面向客户的 AI 客服，面向内部的 AI 助手，用一句话代替查询界面，7×24 在线。',
       },
       {
         no: '05',
-        zh: 'AI 知识库',
-        en: 'AI Knowledge Base',
-        body: '把散落在文档、工单和员工脑子里的知识，变成可检索的资产。',
+        zh: '多模型架构与成本治理',
+        en: 'Multi-model Architecture',
+        body: '按任务分流不同模型，自动降级，用量监控。一家挂了不停摆，账单看得懂。',
       },
     ],
   },
   {
-    domain: '客户找得到',
-    note: 'Google 排名 + AI 搜索可见度',
+    domain: '管得住',
+    note: '数据不出门，人工审阅，可追溯',
     items: [
       {
         no: '06',
-        zh: 'SEO / GEO',
-        en: 'Search & AI Visibility',
-        body: '既做 Google 自然排名，也做 AI 搜索里的品牌可见度。',
+        zh: '本地化 AI 部署',
+        en: 'On-premise AI',
+        body: '在你自己的服务器上跑开源模型，数据不出公司。说清哪些任务本地够用、哪些要上云端。',
+      },
+      {
+        no: '07',
+        zh: 'AI 知识库与红线',
+        en: 'Knowledge Base & Guardrails',
+        body: '文档、工单、员工经验变成可问答的资产，答案有出处。上线前写清红线、人工审阅与回退。',
       },
     ],
   },
   {
-    domain: '流量看得清',
-    note: '口径统一，决策有依据',
+    domain: '算得清',
+    note: '耗时、采纳率、成本都有数',
     items: [
       {
-        no: '07',
-        zh: '数据分析',
-        en: 'Data Analytics',
-        body: '统一口径，把分散的数据变成能支撑决策的一张报表。',
+        no: '08',
+        zh: '效果量化与数据分析',
+        en: 'Measurement & Analytics',
+        body: '上线前定口径，上线后看数字：省下的工时、初稿采纳率、每次调用的成本。AI 是不是生产力，用数说话。',
       },
     ],
   },
@@ -248,46 +261,46 @@ export const WHY_US = [
 export const PROCESS = [
   {
     n: '01',
-    title: '免费诊断',
-    body: '你提供站点地址与后台只读权限，我们在 3 个工作日内出具一份书面报告：现状、风险、优先级建议。',
+    title: 'AI 核心诊断',
+    body: '说说你在用的系统、哪个环节最耗人、数据能不能出公司。两周内出书面报告：值不值得接、接在哪一层、云端还是本地、成本区间。',
   },
   {
     n: '02',
-    title: '方案与报价',
-    body: '基于诊断结果给出分阶段方案，明确范围、周期与价格。不打包销售你不需要的部分。',
+    title: '挑一条流程先做',
+    body: '不做大而全。从报告里挑收益最大、风险最小的一条流程，写清范围、红线、人工审阅在哪一步，再报价。',
   },
   {
     n: '03',
-    title: '分阶段交付',
-    body: '每个阶段都有可验收的产出，你随时能看到进展。关键节点前不动线上环境。',
+    title: '接进系统，上线看数',
+    body: '核心装进你现有的系统，先小范围试跑。上线前定好口径，上线后看数字：省下的工时、初稿采纳率、每次调用的成本。',
   },
   {
     n: '04',
-    title: '持续运营',
-    body: '上线不是终点。按月维护、监控与迭代，可选。',
+    title: '按月迭代，逐步扩面',
+    body: '第一条流程跑稳了，再接第二条。模型升级、知识库更新、成本优化按月做，可选。',
   },
 ]
 
 export const FAQS = [
   {
-    q: '我们已经有外包团队了，还需要你们吗？',
-    a: '很多客户是这样开始的：先让我们做一次诊断，拿到一份中立的现状报告，再决定原团队继续做什么、哪部分交给我们。诊断本身不绑定后续合作。',
+    q: '我们的系统比较老，也能接 AI 吗？',
+    a: '能。AI 核心是接在现有系统外面的一层，不要求换系统。只要系统有接口、数据库或导出口，就能接进去。诊所那套是基于 Medplum 的开源病历，电商那套是自建平台，都没有推倒重来。诊断阶段会先看清接口情况，再告诉你能接到什么程度。',
   },
   {
-    q: '项目一般多久？',
-    a: '取决于范围。站点诊断 3 个工作日；一个中等规模的电商站从零上线通常【待填：周期区间】；平台迁移视数据量与定制程度而定。方案阶段会给出明确排期。',
+    q: '数据不能出公司，还能用大模型吗？',
+    a: '可以，用本地化部署。模型跑在你自己的服务器上，数据不经过任何第三方。诊所案例用的是本地部署的 Qwen3 8B，报告全程没有离开诊所。哪些任务用本地模型、哪些可以走云端，诊断时按数据敏感度分清楚。',
   },
   {
-    q: '你们只做 Shopify 吗？',
-    a: '不是。Shopify 是出海品牌最常用的选择之一，我们也做 WooCommerce、Magento、以及基于无头（Headless）架构的自建站。选型建议在诊断阶段给出，我们不会为了省事把你推向某一个平台。',
+    q: '和直接用 ChatGPT 有什么区别？',
+    a: 'ChatGPT 是个聊天窗口，不认识你的业务、你的数据和你的系统。AI 核心把大模型、你的知识库和业务规则接在一起，结果直接写回系统，员工不用复制粘贴，也不用自己想提示词。能聊和能干活，差的就是这一层。',
   },
   {
-    q: '上线之后出问题谁负责？',
-    a: '交付后有质保期，期内因我们实现导致的问题免费修复。也可以签持续维护，按月响应。',
+    q: 'AI 的答案不靠谱怎么办？',
+    a: '不让它直接对外。每条流程都设人工审阅节点，AI 出初稿，人来放行；回答必须基于你的知识库，查不到就说查不到；不能碰的红线写进规则。上线后持续看采纳率，低于预期就回头调。',
   },
   {
-    q: '数据和源码归谁？',
-    a: '归你。代码仓库、服务器、各类账号的所有权始终在客户名下，我们只在授权范围内访问。合作结束时完整移交。',
+    q: '多久能看到效果？费用怎么算？',
+    a: '诊断 5 个工作日出报告。第一条流程通常 4 到 8 周上线，上线当天就开始记耗时和采纳率，能不能用数据说话。费用分两段：第一条流程按项目报价，之后按月迭代。模型调用成本单独列出，云端还是本地、用大模型还是小模型，都会提前算清。',
   },
 ]
 
@@ -299,16 +312,16 @@ export const FOOTER_COLUMNS = [
   {
     title: '服务',
     links: [
-      '电商站点建设与治理',
-      '企业级平台迁移',
-      '网站现代化改造',
-      'AI 客服',
-      'AI 知识库',
-      'SEO / GEO',
-      '数据分析',
+      'AI 核心诊断',
+      'AI 工作流搭建',
+      '对话式业务助手',
+      '本地化 AI 部署',
+      'AI 知识库与红线',
+      '效果量化与数据分析',
+      '站点与系统基础',
     ],
   },
-  { title: '方案', links: ['出海一站式', '从零出海', '存量站点改造'] },
+  { title: '方案', links: ['打造 AI 核心', '还没开始接 AI', '试过但没落地', '数据不能出门'] },
   {
     title: '关于',
     // 字符串 = 暂无对应页面；对象 = 已有路由
@@ -407,11 +420,11 @@ export const UI = {
   nav: {
     services: '服务',
     links: [
-      { label: '出海一站式', to: '/#services' },
+      { label: '打造 AI 核心', to: '/#services' },
       { label: '关于我们', to: '/about' },
     ],
-    cta: '免费诊断',
-    tagline: '中文沟通 · 海外标准',
+    cta: '免费咨询',
+    tagline: '打造你的 AI 核心',
     openMenu: '打开菜单',
     closeMenu: '关闭菜单',
     // 指向另一种语言的首页；两个文件各写各的，不做自动推导
@@ -433,22 +446,25 @@ export const UI = {
     tightPeriod: true,
   },
 
-  /* 首页 Hero：左文右图，与英文版同一套版式，文案是原来那版 Hero 的原文。
-     title 的数组项 = 逐字翻起的短句轮播，这里轮播四个能力域。
+  /* 首页 Hero：左文右图，与英文版同一套版式。文案定稿见 docs/homepage-plan.txt 第二节。
+     title 的数组项 = 逐字翻起的短句轮播，每句不超过 6 字、不带标点。
      dwellMs 为每张海报的停留时长。 */
   heroShowcase: {
-    eyebrow: '为中国出海品牌打造的海外站点技术团队',
-    title: ['品牌的出海网站，应该', DOMAINS],
+    eyebrow: '',
+    title: ['打造你的 AI 核心，让现有系统', ['写报告', '出方案', '分析数据', '批量出图']],
     lead:
-      '从电商建站、平台迁移到 AI 客服与数据分析，36 Tech 用一个团队承接你海外站点的全部技术环节——中文沟通，海外标准。',
-    cta: '获取免费站点诊断',
-    posterHint: '近期作品',
+      '告别"能聊不能干"，为您的系统注入真正的 AI 生产力',
+    // 证据行：数字已获诊所授权（2026-10-20），只用这三个
+    proof: ['AI核心让产出更高效', '精准', '稳定'],
+    //proof: ['咨询报告 240 分钟 → 5 分钟', '咨询师采纳率 90%+', '数据全程不出诊所'],
+    cta: '预约诊断',
+    posterHint: '近期打造的 AI 核心',
     dwellMs: 8000,
     // 轮播短句的句末标点与读屏用的连接符
-    period: '。',
+    period: '',
     joiner: '、',
     // 全角句号占满 1em 但字形只在左半，需要负边距吃掉右侧空白
-    tightPeriod: true,
+    tightPeriod: false,
   },
   trust: {
     before: '已服务',
@@ -464,20 +480,20 @@ export const UI = {
 
   chat: {
     title: '先问问顾问',
-    sub: '不确定该从哪一步入手？直接描述你的情况，Eva 会告诉你优先级。',
-    advisor: { name: 'Eva', role: '36 Tech 出海顾问', avatarAlt: 'Eva 头像' },
+    sub: '不确定你的系统该从哪一步接入 AI？说说你在用什么系统、哪个环节最耗人，让 Eva 帮你判断。',
+    advisor: { name: 'Eva', role: '36 Tech AI 核心顾问', avatarAlt: 'Eva 头像' },
     online: '在线',
     disclaimer: 'AI 生成内容，仅供初步判断参考，不构成正式方案或报价。',
     opening:
-      '你好，我是 Eva。想聊聊你的海外站点吗？说说现在最头疼的问题——站点慢、想换平台、搜不到、还是数据对不上，我来判断该从哪一步入手。',
+      '你好，我是 Eva。说说你现在在用的系统，还有哪个环节最耗人：写报告、出方案、处理图片、回客户？我来判断 AI 核心该接在哪一层、云端还是本地部署。',
     suggestions: [
-      '我的 Shopify 站首屏要 6 秒，怎么办？',
-      '想从 Magento 迁到 Shopify，会丢排名吗？',
-      '什么是 GEO？和 SEO 有什么区别？',
-      'AI 客服能接住多少比例的咨询？',
+      '我们的 ERP 里每天要手工录几百张单据，AI 能接手吗？',
+      '客户资料不能出公司，本地模型够用吗？',
+      '已经在用 ChatGPT，怎么接进现有系统？',
+      'AI 答错了怎么办？人工审阅在哪一步？',
     ],
     thinking: '正在思考…',
-    placeholder: '描述你的站点情况，Enter 发送，Shift+Enter 换行',
+    placeholder: '说说你在用的系统和最耗人的环节，Enter 发送，Shift+Enter 换行',
     send: '发送',
     errNotConfigured: '聊天顾问还没接上模型。',
     errPrefix: '出了点问题：',
@@ -487,27 +503,27 @@ export const UI = {
 
   pains: {
     num: '01',
-    title: '是不是很熟悉？',
+    title: '为什么 AI 没能形成生产力？',
     // 这一节的四张卡自己就说清楚了，不再加副标题
     closingLead: '这些其实是同一个问题：',
-    closingStrong: '站点一直被当成一个项目，而不是一项资产。',
+    closingStrong: 'AI 仅停在聊天框里，还没能以核心迸发出生产力',
   },
 
   services: {
     num: '02',
-    title: '一站式服务，四个能力域',
-    sub: '你可以只用其中一项，也可以把整条链路交给我们。服务之间彼此打通，不必在多个供应商之间来回传话。',
+    title: '打造 AI 核心，要做对四件事',
+    sub: 'AI 生产力不是多开一个聊天窗口，而是你的系统自己会干活。接得上、跑得稳、管得住、算得清，缺一项都落不了地。你可以只要其中一项，也可以整条交给我们。',
   },
 
   paths: { num: '03', title: '你现在处在哪个阶段？' },
 
-  whyUs: { num: '04', title: '海外供应商懂标准，国内供应商懂你。我们两样都要。' },
+  whyUs: { num: '04', title: '海外供应商懂标准，国内供应商懂你。我们两样都占' },
 
-  process: { num: '05', title: '四步开始', sub: '每一步都有明确产出，你随时知道进展到哪。' },
+  process: { num: '05', title: '四步，把 AI 接进你的系统', sub: '先诊断再动手，先一条流程再扩面。每一步都有可验收的产出和可引用的数字。' },
 
   cases: { num: '06', title: '做过的事', sub: '两个刚交付完的项目。' },
 
-  faq: { num: '07', title: '常见问题' },
+  faq: { num: '07', title: '关于打造 AI 核心，常被问到的' },
 
   form: {
     eyebrow: '免费诊断',
@@ -544,7 +560,7 @@ export const UI = {
   },
 
   footer: {
-    blurb: '出海品牌的网站，跑得快、找得到、答得上、算得清。',
+    blurb: '告别「能聊不能干」，为你的系统注入真正的 AI 生产力',
     meta: [
       ['城市', 'Irvine, CA'],
       ['邮箱', 'yun@36tech.info'],
@@ -597,12 +613,190 @@ export const UI = {
 }
 
 
+/* ------------------------------------------------------------------
+   案例 · 心理诊所报告助手 —— 草稿见 docs/brainstroms.txt 第六节
+   数字与署名已获诊所授权（2026-10-20）。患者信息一律不出现。
+   【待填：xxx】为占位符，素材到位后替换。
+------------------------------------------------------------------ */
+
+export const CASE_CLINIC = {
+  eyebrow: '案例 · 医疗与心理健康',
+  title: ['一份咨询报告，', '从 240 分钟到 5 分钟。'],
+  lead: '一家心理诊所的 20 位咨询师，用本地部署的大模型和自建知识库生成报告初稿。病历数据全程不出诊所，咨询师审阅后签发。',
+  client: { name: '聆心 心理咨询工作室', logo: clinicLogo, logoLabel: 'CLINIC LOGO', location: '加州 - Irvine' },
+  tags: ['Medplum', 'Qwen3 8B · 本地部署', '自建知识库', 'FHIR 病历', '人工审阅签发'],
+  stats: [
+    { value: '240 → 5', unit: '分钟', label: '一份咨询报告的耗时' },
+    { value: '90%+', unit: '', label: '咨询师采纳 AI 初稿的比例' },
+    { value: '20', unit: '位', label: '咨询师在用，数据全程不出诊所' },
+  ],
+  challenge: {
+    eyebrow: '之前的状况',
+    title: '写报告，比做咨询还花时间。',
+    paragraphs: [
+      '每次咨询之后，咨询师要把谈话记录整理成一份正式报告：摘要、评估、建议、下一步计划。一份报告平均要花四个小时。',
+      '诊所有二十位咨询师，报告的质量和格式却因人而异。新来的咨询师要看很久的旧报告才能写出诊所认可的样子。',
+      '病历属于高度敏感的医疗数据。诊所明确要求：不能把记录发给任何公开的 AI 服务。',
+    ],
+  },
+  solution: {
+    eyebrow: '我们做了什么',
+    title: '接进病历系统，而不是另开一个聊天框。',
+    items: [
+      {
+        n: '01',
+        title: '报告摘要',
+        body: '咨询记录保存后，系统自动生成摘要草稿。咨询师看一遍、改几处，就能签发。',
+      },
+      {
+        n: '02',
+        title: '以优质报告为范本起草新报告',
+        body: '把诊所历史上公认写得好的报告做成知识库。新报告以它们为范本生成，用的是诊所自己的写法和术语。',
+      },
+      {
+        n: '03',
+        title: '患者从初次问诊起全程在系统内',
+        body: '从首次问诊开始，笔记、评估、分析都记在 Medplum 里。报告不再散落在各人的文档和纸面上。',
+      },
+    ],
+    shot: clinicShot,
+    shotLabel: 'Medplum 病历中 AI 生成的报告初稿',
+  },
+  flow: {
+    eyebrow: '一份报告是怎么生成的',
+    title: '六步，全部在诊所自己的服务器上。',
+    steps: [
+      { n: '01', title: '咨询记录', body: '咨询师在 Medplum 里完成本次记录。' },
+      { n: '02', title: '取病历', body: '系统按 FHIR 标准读取该患者的既往记录与评估。' },
+      { n: '03', title: '检索范本', body: '从知识库里找出最相近的几份优质报告作为参考。' },
+      { n: '04', title: '本地模型起草', body: 'Qwen3 8B 在诊所服务器上生成初稿，数据不出内网。' },
+      { n: '05', title: '咨询师审阅', body: '初稿回到 Medplum，由咨询师修改、确认。' },
+      { n: '06', title: '签发归档', body: '签发后的报告进入病历，同时可以成为新的范本。' },
+    ],
+  },
+  guardrails: {
+    eyebrow: '红线',
+    title: '哪些事 AI 不做。',
+    items: [
+      { title: '不出诊所', body: '模型与知识库都部署在诊所的服务器上。没有任何病历数据发往外部服务。' },
+      { title: '不直接签发', body: 'AI 只出初稿。每一份报告都由咨询师审阅并签名，责任在人。' },
+      { title: '不编造', body: '初稿只能引用本次记录与既往病历里有的内容。没有依据的判断不写。' },
+      { title: '可追溯', body: '每份初稿保留生成时参考了哪几份范本、哪些记录，出问题可以查。' },
+    ],
+  },
+  quote: {
+    text: '以前每次咨询结束，最怕的就是回去写报告。现在初稿五分钟就在病历里等着我，我改的是措辞，不是从头写。更重要的是，记录一直在诊所自己的系统里，我们不用为了省时间去冒险。',
+    name: '张燏',
+    role: '资深心理咨询师',
+  },
+  stack: {
+    eyebrow: '技术栈',
+    items: [
+      { name: 'Medplum', note: '开源医疗平台，FHIR 标准病历' },
+      { name: 'Qwen3 8B', note: '开源大模型，本地部署' },
+      { name: '自建知识库', note: '诊所优质报告的向量检索' },
+      { name: '内网部署', note: '诊所自有服务器，不依赖公有云 AI 服务' },
+    ],
+  },
+  cta: {
+    title: '你的业务里，也有这样一份「四小时的报告」吗？',
+    body: '重复、耗时、格式固定、数据又不能外传的工作，正是本地化 AI 最适合接手的。先做一次落地诊断，看看值不值得。',
+    primary: '预约 AI 落地诊断',
+    secondary: '看看其他案例',
+  },
+}
+
+export const CASE_PMS = {
+  eyebrow: '案例 · 地产管理',
+  title: ['租客的问题、合同里的条款、', '每月的报表，系统自己答。'],
+  lead: '一家地产管理公司在现有的物业管理系统上接入 AI 核心：租客常见问题自动回复、租约条款即问即答、维修工单自动分派、月度经营报表自动生成。系统没有换，员工的操作习惯也没有变。',
+  client: { name: '【待填：公司名称】', logoLabel: 'CLIENT LOGO', location: '美国加州' },
+  tags: ['现有物业系统接入', '租约知识库', '工单自动分派', '经营报表生成', '人工审阅'],
+  stats: [
+    { value: '【待填】', unit: '', label: '租客咨询由 AI 直接答复的比例' },
+    { value: '【待填】', unit: '', label: '一份月度经营报表的耗时变化' },
+    { value: '【待填】', unit: '', label: '在管物业数量' },
+  ],
+  challenge: {
+    eyebrow: '之前的状况',
+    title: '同样的问题，每天被问几十遍。',
+    paragraphs: [
+      '租客的问题大多重复：租金什么时候扣、合同哪条怎么解释、报修了什么时候来。每个问题都要人翻系统、翻合同再回复。',
+      '维修工单靠人工判断类别和紧急程度，再手动派给维修人员。忙起来容易漏，闲下来又没人跟进。',
+      '月底的经营报表要从几个模块里导数据，拼在一起再写说明。一个物业经理要花掉两三天。',
+    ],
+  },
+  solution: {
+    eyebrow: '我们做了什么',
+    title: '接进物业系统，让它自己回答、自己分派、自己写报表。',
+    items: [
+      {
+        n: '01',
+        title: '租客问答',
+        body: '把租约、物业规章和历史答复做成知识库。租客在原有渠道提问，AI 基于知识库作答，拿不准的转人工。',
+      },
+      {
+        n: '02',
+        title: '工单自动分派',
+        body: '报修内容进来后，AI 判断类别和紧急程度，按规则派给对应的维修人员，并给租客一个预计时间。',
+      },
+      {
+        n: '03',
+        title: '经营报表生成',
+        body: '月底系统自动汇总收租、空置、维修支出，生成带说明的报表初稿，物业经理审阅后发出。',
+      },
+    ],
+    shotLabel: '【待填：系统界面脱敏截图】',
+  },
+  flow: {
+    eyebrow: '一条租客咨询是怎么处理的',
+    title: '五步，全部在物业系统内完成。',
+    steps: [
+      { n: '01', title: '租客提问', body: '租客通过原有的门户或邮件提问，进入系统。' },
+      { n: '02', title: '取租客信息', body: '系统读取该租客的租约、账单和历史工单。' },
+      { n: '03', title: '检索知识库', body: '从租约条款、物业规章和历史答复中找出依据。' },
+      { n: '04', title: '生成答复', body: '模型基于依据起草答复，附上出处；没有依据则转人工。' },
+      { n: '05', title: '记录归档', body: '答复与处理记录写回系统，成为下次的参考。' },
+    ],
+  },
+  guardrails: {
+    eyebrow: '红线',
+    title: '哪些事 AI 不做。',
+    items: [
+      { title: '不碰钱', body: '涉及退款、减免、押金处理的问题，AI 只记录和转交，不给承诺。' },
+      { title: '不编条款', body: '答复只能引用租约和规章里有的内容，查不到就说查不到。' },
+      { title: '不直接发报表', body: '报表初稿必须经物业经理审阅后才对外，责任在人。' },
+      { title: '可追溯', body: '每条答复保留引用的条款和记录，出争议可以查。' },
+    ],
+  },
+  quote: {
+    text: '【待填：一句客户评语】',
+    name: '【待填：姓名】',
+    role: '【待填：职务】',
+  },
+  stack: {
+    eyebrow: '技术栈',
+    items: [
+      { name: '现有物业系统', note: '通过接口接入，不替换' },
+      { name: '大模型', note: '【待填：云端或本地模型】' },
+      { name: '租约知识库', note: '租约、规章、历史答复的向量检索' },
+      { name: '规则引擎', note: '工单分派与红线判断' },
+    ],
+  },
+  cta: {
+    title: '你的系统里，也有每天被问几十遍的问题吗？',
+    body: '重复的问答、靠人判断的分派、月底拼出来的报表，都是 AI 核心最先能接手的。先做一次 AI 核心诊断，看看值不值得。',
+    primary: '预约 AI 核心诊断',
+    secondary: '看看其他案例',
+  },
+}
+
 /* 文档级元信息：<html lang> 与标签页标题、描述 */
 export const META = {
   lang: 'zh-CN',
-  title: '出海品牌的海外站点技术团队 | 36 Tech',
+  title: '打造你的 AI 核心 | 36 Tech',
   description:
-    '为中国出海品牌提供海外站点一站式技术服务：电商建站、平台迁移、网站现代化、AI 客服与知识库、SEO/GEO、数据分析。中文沟通，海外标准。免费站点诊断，3 个工作日出报告。',
+    '为你已经在用的系统打造 AI 核心：Medplum、Shopify、ERP、CRM 不用换。大模型、知识库、业务规则接进去，云端或本地部署，数据可以不出门。先做 AI 核心诊断，再决定值不值得。',
 }
 
 /* 聚合默认导出，供 content/index.jsx 的语言上下文使用。
@@ -629,6 +823,8 @@ export default {
   ABOUT_GAP,
   ABOUT_PRINCIPLES,
   ABOUT_CONCERNS,
+  CASE_CLINIC,
+  CASE_PMS,
   CONTACT_INFO,
   CONTACT_CODES,
   MARKETS,

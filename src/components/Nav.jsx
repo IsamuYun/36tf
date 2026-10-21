@@ -138,7 +138,7 @@ export default function Nav() {
           <span className="hidden sm:block">
             <Button
               as="a"
-              href={href('/#diagnose')}
+              href={href('/contact')}
               variant="amber"
               className="!px-6 !py-2.5 !text-[14px]"
             >
@@ -210,7 +210,7 @@ export default function Nav() {
           </div>
           <Button
             as="a"
-            href={href('/#diagnose')}
+            href={href('/contact')}
             variant="amber"
             className="w-full"
             onClick={() => setOpenMobile(false)}

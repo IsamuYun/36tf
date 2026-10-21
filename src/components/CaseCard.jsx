@@ -1,3 +1,6 @@
+import { Link } from 'react-router-dom'
+import { useHref } from '../content/index.jsx'
+
 /**
  * 案例卡：960×400 直角卡片。
  * 静止为白底、图标隐藏、主图退在后面；鼠标进入后渐变自下而上揭开，
@@ -8,11 +11,13 @@
  * 统一套固定宽高会变形或裁切。
  */
 export default function CaseCard({ data }) {
-  const { title, subtitle, tags, mainShot, gradient, icons } = data
+  const { to, title, subtitle, tags, mainShot, gradient, icons } = data
+  const href = useHref()
 
   /* 卡片带 1px 直角边框。渐变层用 inset-0 贴的是 padding box（边框以内），
      所以悬停揭开渐变时边框不会被盖掉。 */
   return (
+    <Link to={href(to)} className="block" aria-label={title}>
     <article className="case-card relative mx-auto h-[400px] w-full max-w-[960px] overflow-hidden border border-ink/12 bg-white">
       {/* 渐变层：静止时被 clip-path 完全裁掉，悬停时自下而上揭开 */}
       <div className="case-bg absolute inset-0" style={{ background: gradient }} />
@@ -69,5 +74,6 @@ export default function CaseCard({ data }) {
         />
       </div>
     </article>
+    </Link>
   )
 }

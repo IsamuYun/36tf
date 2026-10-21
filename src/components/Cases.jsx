@@ -21,9 +21,10 @@ const EMERALD = 'linear-gradient(0deg, #7FCFB4 0%, #A5DFC8 32%, #CFEEE0 66%, #F0
 
 const CASES = [
   {
-    title: 'Hikvision Migration',
-    subtitle: '10,000 Pages, Zero Traffic Loss',
-    tags: ['Drupal 7 → AEM', 'Platform Migration', 'Zero Traffics Loss'],
+    to: '/cases/pms',
+    title: '地产管理系统',
+    subtitle: 'AI Powered Property Management',
+    tags: ['AI 核心', '物业数据分析', '现有系统接入'],
     mainShot: hikMain,
     gradient: ICE_BLUE,
     icons: [
@@ -76,9 +77,10 @@ const CASES = [
     ],
   },
   {
-    title: 'CESASC.org Upgrade',
-    subtitle: 'Drupal 7 EOL → Drupal 11 Modernization',
-    tags: ['Drupal 7 → Drupal 11', 'Drupal Upgrade', 'UI/UX Design'],
+    to: '/cases/clinic',
+    title: '诊所管理系统',
+    subtitle: 'Medplum + Qwen3 8B · 报告 240 分钟 → 5 分钟',
+    tags: ['Medplum', '本地化部署', 'AI 报告生成'],
     mainShot: cesascMain,
     gradient: EMERALD,
     icons: [
@@ -135,10 +137,10 @@ const CASES = [
 export default function Cases() {
   const { UI } = useContent()
   return (
-    <Band tone="white">
+    <Band tone="white" id="cases">
       <div>
         <Reveal>
-          <SectionHead num={UI.cases.num} title={UI.cases.title} zh={UI.cases.sub} />
+          <SectionHead title={UI.cases.title} zh={UI.cases.sub} />
         </Reveal>
 
         <div className="space-y-6">

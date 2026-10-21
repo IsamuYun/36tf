@@ -1,14 +1,16 @@
 import { Reveal, SectionHead, Arrow } from './ui.jsx'
-import { useContent } from '../content/index.jsx'
+import { Link } from 'react-router-dom'
+import { useContent, useHref } from '../content/index.jsx'
 import Band from './Band.jsx'
 
 export default function Services() {
   const { SERVICE_GROUPS, UI } = useContent()
+  const href = useHref()
   return (
-    <Band id="services" tone="white">
+    <Band id="services" tone="white" className="!py-8">
       <div>
         <Reveal>
-          <SectionHead num={UI.services.num} title={UI.services.title} zh={UI.services.sub} />
+          <SectionHead title={UI.services.title} zh={UI.services.sub} />
         </Reveal>
 
         <div className="grid gap-5 lg:grid-cols-2">
@@ -28,16 +30,13 @@ export default function Services() {
                 {/* 服务条目 */}
                 <div className="flex flex-1 flex-col">
                   {group.items.map((item, i) => (
-                    <a
+                    <Link
                       key={item.no}
-                      href="#diagnose"
+                      to={href('/contact')}
                       className={`group flex items-start gap-4 py-4 transition-colors ${
                         i > 0 ? 'border-t border-ink/[0.07]' : ''
                       }`}
                     >
-                      <span className="mt-1 font-mono text-[11px] text-ink/30 transition-colors group-hover:text-fox">
-                        {item.no}
-                      </span>
                       <span className="flex-1">
                         <span className="flex items-center gap-2">
                           <span className="font-display text-[16.5px] font-bold transition-colors group-hover:text-fox md:text-[17.5px]">
@@ -52,7 +51,7 @@ export default function Services() {
                           {item.body}
                         </span>
                       </span>
-                    </a>
+                    </Link>
                   ))}
                 </div>
               </div>

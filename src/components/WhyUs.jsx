@@ -8,7 +8,7 @@ export default function WhyUs() {
     <Band tone="white">
       <div>
         <Reveal>
-          <SectionHead num={UI.whyUs.num} title={UI.whyUs.title} />
+          <SectionHead title={UI.whyUs.title} />
         </Reveal>
 
         <div className="grid gap-10 md:grid-cols-3 md:gap-8">
